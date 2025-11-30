@@ -1,0 +1,64 @@
+/* app/globals.css */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ---------------------------
+   GLOBAL FONT SMOOTHING
+--------------------------- */
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: var(--font-description), ui-sans-serif, system-ui;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Headings still default via Tailwind utility classes */
+h1, h2, h3 {
+  font-weight: 600;
+}
+
+/* -------------------------------------
+   REMOVE ALL OLD BUTTON STYLING
+   (your Tailwind plugin handles buttons)
+-------------------------------------- */
+button {
+  all: unset;            /* removes browser default styles */
+  cursor: pointer;
+  display: inline-block;
+}
+
+button:focus {
+  outline: none;
+}
+
+/* Helper container */
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1rem;
+  padding-right: 1rem;
+}
+
+/* -------------------------------------
+   FONT CLASSES (mapping to your Tailwind config)
+-------------------------------------- */
+
+/* HelloBumble title — Great Vibes */
+.font-hellobumble {
+  font-family: var(--font-hellobumble);
+}
+
+/* Headings / Buttons — Ingrid Darling */
+.font-hand {
+  font-family: var(--font-hand);
+}
+
+/* Descriptions / All other text — ABeeZee */
+.font-description {
+  font-family: var(--font-description);
+}
