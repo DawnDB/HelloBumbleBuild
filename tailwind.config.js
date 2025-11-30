@@ -8,10 +8,9 @@ module.exports = {
   theme: {
     extend: {
       fontFamily: {
-        hellobumble: "var(--font-hellobumble)", // Brand font
-        hand: "var(--font-hand)",               // Headings / buttons
-        description: ["ABeeZee", "sans-serif"], // Descriptions
-        sans: ["Inter", "ui-sans-serif", "system-ui"], // Default
+        hellobumble: ['"Great Vibes"', 'cursive'], // HelloBumble
+        product: ['"Ingrid Darling"', 'cursive'],    // Product names
+        description: ['"ABeeZee"', 'sans-serif'],   // Everything else
       },
       colors: {
         pastel: {
