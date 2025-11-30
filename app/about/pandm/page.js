@@ -10,7 +10,7 @@ export default function ProductsAndMaterials() {
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-10 text-center">
 
         {/* Page Title */}
-        <h1 className="text-5xl mb-10  font-description">
+        <h1 className="text-5xl mb-10 font-description">
           Products & Materials
         </h1>
 
