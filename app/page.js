@@ -17,18 +17,18 @@ export default function Home() {
         HelloBumble
       </h1>
 
-      <p className="text-lg font-hand tracking-wide text-blackText">
+      <p className="text-lg font-product tracking-wide text-blackText">
         Buzz into a better life
       </p>
 
-      <p className="text-lg font-hand tracking-wide mb-10 text-blackText">
+      <p className="text-lg font-product tracking-wide mb-10 text-blackText">
         Mom&amp;Baby Cloth Essentials
       </p>
 
       {/* --- ABOUT SECTION (IN BOX) --- */}
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/about/hellobumble">
-          <h2 className="text-3xl font-hand text-palePurpleClickable cursor-pointer mb-2">
+          <h2 className="text-3xl font-description text-palePurpleClickable cursor-pointer mb-2">
             About HelloBumble
           </h2>
         </Link>
@@ -43,7 +43,7 @@ export default function Home() {
       {/* --- PRODUCTS & MATERIALS SECTION (IN BOX) --- */}
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/about/pandm">
-          <h2 className="text-3xl font-hand text-palePurpleClickable cursor-pointer mb-2">
+          <h2 className="text-3xl font-description text-palePurpleClickable cursor-pointer mb-2">
             Our Products &amp; Materials
           </h2>
         </Link>
@@ -57,7 +57,7 @@ export default function Home() {
       {/* --- SHOP SECTION (IN BOX) --- */}
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/shop">
-          <h2 className="text-3xl font-hand text-palePurpleClickable cursor-pointer mb-4">
+          <h2 className="text-3xl font-description text-palePurpleClickable cursor-pointer mb-4">
             Shop HelloBumble
           </h2>
         </Link>
@@ -74,19 +74,19 @@ export default function Home() {
 
       {/* --- TREASURY SECTION (IN BOX) --- */}
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
-        <h2 className="text-3xl font-hand text-blackText mb-4">
+        <h2 className="text-3xl font-description text-blackText mb-4">
           Treasury
         </h2>
 
         <div className="flex flex-col gap-3">
           <Link href="/preloved">
-            <p className="text-2xl font-hand text-palePurpleClickable cursor-pointer">
+            <p className="text-2xl font-description text-palePurpleClickable cursor-pointer">
               Pre-Loved
             </p>
           </Link>
 
           <Link href="/about/helpamama">
-            <p className="text-2xl font-hand text-palePurpleClickable cursor-pointer">
+            <p className="text-2xl font-description text-palePurpleClickable cursor-pointer">
               Help-a-Mama
             </p>
           </Link>
@@ -96,7 +96,7 @@ export default function Home() {
       {/* --- AMBUZZADOR SECTION (IN BOX) --- */}
       <div className="w-full max-w-3xl bg-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/ambuzzador">
-          <h2 className="text-3xl font-hand text-palePurpleClickable cursor-pointer mb-2">
+          <h2 className="text-3xl font-description text-palePurpleClickable cursor-pointer mb-2">
             AmbuZZador
           </h2>
         </Link>
