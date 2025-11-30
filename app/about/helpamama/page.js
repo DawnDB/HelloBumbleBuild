@@ -79,11 +79,9 @@ export default function HelpAMamaPage() {
   };
 
   return (
-    <div className="min-h-screen px-6 py-16 text-blackText">
+    <div className="min-h-screen bg-[url('/pastel-marble.jpg')] bg-cover bg-center bg-no-repeat px-6 py-16 text-blackText">
       <div className="max-w-3xl mx-auto bg-whiteOverlay backdrop-blur-sm rounded-2xl p-6 shadow">
-        <h1 className="text-4xl mb-6 font-hellobumble">
-          HelloBumble Help-a-Mama
-        </h1>
+        <h1 className="text-4xl mb-6 font-hellobumble">HelloBumble Help-a-Mama</h1>
         <p className="font-description leading-relaxed">
           We are firm believers that God will provide and that He sometimes uses
           other people to do so, and that He brings people to eachother for a
