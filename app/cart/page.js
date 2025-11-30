@@ -42,20 +42,21 @@ export default function Cart() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-20 text-black">
-      <h1
-        className="text-4xl mb-10 text-center"
+    <div className="min-h-screen px-6 py-20 text-blackText bg-[url('/pastel-marble.jpg')] bg-cover bg-center bg-no-repeat"
+  >
+    <h1
+      className="text-4xl mb-10 text-center"
+      style={{ fontFamily: "var(--font-description)" }}
+    >
+      Cart
+    </h1>
+
+    {cartItems.length === 0 ? (
+      <p
+        className="text-center text-lg"
         style={{ fontFamily: "var(--font-description)" }}
       >
-        Cart
-      </h1>
-
-      {cartItems.length === 0 ? (
-        <p
-          className="text-center text-lg"
-          style={{ fontFamily: "var(--font-description)" }}
-        >
-          Your cart is empty.
+        Your cart is empty.
         </p>
       ) : (
         <div className="max-w-4xl mx-auto flex flex-col gap-6">
