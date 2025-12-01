@@ -13,8 +13,14 @@ html, body {
   font-family: var(--font-description), ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
 
+  /* 🌸 Pastel marble background */
+  background-image: url('/pastel-marbled.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+  
 /* Headings still default via Tailwind utility classes */
 h1, h2, h3 {
   font-weight: 600;
@@ -25,7 +31,7 @@ h1, h2, h3 {
    (your Tailwind plugin handles buttons)
 -------------------------------------- */
 button {
-  all: unset;            /* removes browser default styles */
+  all: unset;            
   cursor: pointer;
   display: inline-block;
 }
@@ -53,12 +59,12 @@ button:focus {
   font-family: var(--font-hellobumble);
 }
 
-/* Headings / Buttons — Ingrid Darling */
+/* Product names — Ingrid Darling */
 .font-product {
   font-family: var(--font-product);
 }
 
-/* Descriptions / All other text — ABeeZee */
+/* Everything else — ABeeZee */
 .font-description {
   font-family: var(--font-description);
 }
