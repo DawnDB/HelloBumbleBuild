@@ -5,6 +5,10 @@ import localFont from "next/font/local";
 import { FaBars, FaTimes, FaPhone, FaEnvelope } from "react-icons/fa";
 import Image from "next/image";
 
+// Import modals
+import BuzzLetterModal from "@/app/components/modals/NewsletterModal";
+import ContactModal from "@/app/components/modals/ContactModal";
+
 // Fonts
 const helloBumbleFont = localFont({ src: "/fonts/GreatVibes-Regular.ttf", variable: "--font-hellobumble" });
 const productFont = localFont({ src: "/fonts/IngridDarling-Regular.ttf", variable: "--font-product" });
@@ -17,12 +21,20 @@ export const metadata = {
 };
 
 export default function RootLayout({ children }) {
+  const [showNewsletter, setShowNewsletter] = useState(false);
+  const [showContactModal, setShowContactModal] = useState(false);
+
   return (
     <html lang="en" className={`${helloBumbleFont.variable} ${productFont.variable} ${descriptionFont.variable}`}>
       <body className="min-h-screen bg-[url('/pastel-marble.jpg')] bg-cover bg-center text-black font-description">
         <Header />
         <main className="pt-32 pb-48">{children}</main>
-        <Footer />
+        <Footer
+          onOpenNewsletter={() => setShowNewsletter(true)}
+          onOpenContact={() => setShowContactModal(true)}
+        />
+        <BuzzLetterModal isOpen={showNewsletter} onClose={() => setShowNewsletter(false)} />
+        <ContactModal isOpen={showContactModal} onClose={() => setShowContactModal(false)} />
       </body>
     </html>
   );
@@ -77,16 +89,13 @@ function MobileMenu() {
 }
 
 /* ---------------------------------- FOOTER ----------------------------------- */
-function Footer() {
-  const [showNewsletter, setShowNewsletter] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
-
+function Footer({ onOpenNewsletter, onOpenContact }) {
   return (
     <footer id="footer-contact" className="bg-white/60 backdrop-blur-md rounded-t-3xl shadow-soft px-8 py-16 mt-24 relative">
       <div className="text-center max-w-xl mx-auto mb-16">
         <h2 className="text-2xl font-product">Sign up for our new arrivals, promotions and discounts letter.</h2>
         <p className="text-sm mt-2">Emails will be few and far in between to ensure we do not spam you.</p>
-        <button className="mt-4 px-6 py-3 rounded-xl bg-pastelPink shadow-soft" onClick={() => setShowNewsletter(true)}>Sign Up</button>
+        <button className="mt-4 px-6 py-3 rounded-xl bg-pastelPink shadow-soft" onClick={onOpenNewsletter}>Sign Up</button>
       </div>
 
       <h3 className="text-xl font-product mb-4">Contact us</h3>
@@ -112,16 +121,13 @@ function Footer() {
           <Link href="/ambuzzador">AmbuZZador</Link>
           <Link href="/preloved">Pre-Loved</Link>
           <Link href="/about/helpamama">Help-a-Mama</Link>
-          <button onClick={() => setShowContactModal(true)}>Contact us</button>
+          <button onClick={onOpenContact}>Contact us</button>
         </div>
       </div>
 
       <p className="mt-16 text-center text-sm">All rights reserved</p>
       <p className="text-center font-hellobumble text-2xl mt-4">HelloBumble est. 2025</p>
       <button className="mx-auto block mt-6 text-sm underline" onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}>Back to top</button>
-
-      <BuzzLetterModal isOpen={showNewsletter} onClose={() => setShowNewsletter(false)} />
-      <ContactModal isOpen={showContactModal} onClose={() => setShowContactModal(false)} />
     </footer>
   );
 }
