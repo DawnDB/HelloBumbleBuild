@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import NeedHelpModal from "../components/NeedHelpModal";
-import DonateModal from "../components/DonateModal";
+import NeedHelpModal from "@/app/components/modals/NeedHelpModal";
+import DonateModal from "@/app/components/modals/DonateModal";
 
 export default function HelpAMamaPage() {
   const [showNeedModal, setShowNeedModal] = useState(false);
