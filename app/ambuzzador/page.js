@@ -1,14 +1,12 @@
 "use client";
 import { useState } from "react";
-import BecomeAmbuzzadorModal from "./become/modal";
-
+import AmbuzzadorModal from "@/app/components/modals/AmbuzzadorModal";
 
 export default function AmbuzzadorPage() {
-const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
 
-
-return (
-<div className="min-h-screen px-6 py-20 bg-[url('/pastel-marble.jpg')] bg-cover bg-center text-black font-description flex flex-col items-center">
+  return (
+    <div className="min-h-screen px-6 py-20 bg-[url('/pastel-marble.jpg')] bg-cover bg-center text-black font-description flex flex-col items-center">
 <div className="w-full max-w-3xl bg-white/20 backdrop-blur-xl rounded-2xl shadow-soft p-10 text-center">
 <h1 className="text-5xl mb-6 font-hellobumble">HelloBumble AmbuZZador Program</h1>
 
