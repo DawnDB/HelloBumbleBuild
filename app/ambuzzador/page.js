@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import AmbuzzadorModal from "@/app/components/modals/AmbuzzadorModal";
+import AmbuzzadorModal from "@/components/modals/AmbuzzadorModal";
 
 export default function AmbuzzadorPage() {
   const [open, setOpen] = useState(false);
