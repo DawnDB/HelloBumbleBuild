@@ -4,6 +4,11 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Smooth scrolling for in-page links */
+html {
+  scroll-behavior: smooth;
+}
+
 /* ---------------------------
    GLOBAL FONT SMOOTHING
 --------------------------- */
