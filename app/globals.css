@@ -1,75 +1,55 @@
-/* app/globals.css */
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* Smooth scrolling for in-page links */
 html {
   scroll-behavior: smooth;
 }
 
-/* ---------------------------
-   GLOBAL FONT SMOOTHING
---------------------------- */
 html, body {
   margin: 0;
   padding: 0;
   font-family: var(--font-description), ui-sans-serif, system-ui;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-
-  /* 🌸 Pastel marble background */
-  background-image: url('/pastel-marbled.jpg');
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
 }
-  
-/* Headings still default via Tailwind utility classes */
+
+/* Headings */
 h1, h2, h3 {
   font-weight: 600;
 }
 
-/* -------------------------------------
-   REMOVE ALL OLD BUTTON STYLING
-   (your Tailwind plugin handles buttons)
--------------------------------------- */
+/* Safer button reset */
 button {
-  all: unset;            
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
-  display: inline-block;
 }
 
 button:focus {
   outline: none;
 }
 
-/* Helper container */
+/* Container helper */
 .container {
   width: 100%;
   max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  padding-left: 1rem;
-  padding-right: 1rem;
+  margin-inline: auto;
+  padding-inline: 1rem;
 }
 
-/* -------------------------------------
-   FONT CLASSES (mapping to your Tailwind config)
--------------------------------------- */
-
-/* HelloBumble title — Great Vibes */
+/* Font utilities */
 .font-hellobumble {
   font-family: var(--font-hellobumble);
 }
 
-/* Product names — Ingrid Darling */
 .font-product {
   font-family: var(--font-product);
 }
 
-/* Everything else — ABeeZee */
 .font-description {
   font-family: var(--font-description);
 }
