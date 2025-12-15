@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Image from "next/image";
 
-export default function Cart() {
+export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
 
   // Load cart
@@ -42,107 +43,109 @@ export default function Cart() {
   );
 
   return (
-    <div className="min-h-screen px-6 py-20 text-blackText bg-[url('/pastel-marble.jpg')] bg-cover bg-center bg-no-repeat"
-  >
-    <h1
-      className="text-4xl mb-10 text-center"
-      style={{ fontFamily: "var(--font-description)" }}
-    >
-      Cart
-    </h1>
+    <div className="min-h-screen px-6 py-20 flex justify-center">
+      <div className="w-full max-w-4xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10">
 
-    {cartItems.length === 0 ? (
-      <p
-        className="text-center text-lg"
-        style={{ fontFamily: "var(--font-description)" }}
-      >
-        Your cart is empty.
-        </p>
-      ) : (
-        <div className="max-w-4xl mx-auto flex flex-col gap-6">
-          {cartItems.map((item) => (
-            <div
-              key={item.id}
-              className="flex flex-col sm:flex-row items-center gap-4 bg-whiteOverlay p-4 rounded-2xl shadow"
-            >
-              {/* Image */}
-              <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-2xl overflow-hidden border shadow">
-                <img
-                  src={item.image}
-                  alt={item.name}
-                  className="w-full h-full object-cover"
-                />
-              </div>
+        {/* Header */}
+        <header className="text-center mb-12">
+          <h1 className="text-4xl md:text-5xl font-hellobumble text-neutral-blackText mb-3">
+            Your Cart
+          </h1>
+          <p className="font-description italic text-neutral-blackText">
+            A few beautiful essentials, almost ready for home.
+          </p>
+        </header>
 
-              {/* Info */}
-              <div className="flex-1 text-center sm:text-left">
-                <h2
-                  className="text-xl"
-                  style={{ fontFamily: "var(--font-description)" }}
-                >
-                  {item.name}
-                </h2>
-
-                <p
-                  className="mt-1"
-                  style={{ fontFamily: "var(--font-description)" }}
-                >
-                  R{item.price}
-                </p>
-              </div>
-
-              {/* Quantity */}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => decrement(item.id)}
-                  className="btn-quantity-blue w-8 h-8 flex items-center justify-center rounded-xl font-hand text-lg"
-                >
-                  –
-                </button>
-
-                <span
-                  className="text-lg"
-                  style={{ fontFamily: "var(--font-description)" }}
-                >
-                  {item.quantity}
-                </span>
-
-                <button
-                  onClick={() => increment(item.id)}
-                  className="btn-quantity-blue w-8 h-8 flex items-center justify-center rounded-xl font-hand text-lg"
-                >
-                  +
-                </button>
-              </div>
-
-              {/* Remove */}
-              <button
-                onClick={() => removeItem(item.id)}
-                className="text-red-500 font-description text-sm underline"
-              >
-                Remove
-              </button>
-            </div>
-          ))}
-
-          {/* Total + Continue */}
-          <div className="bg-whiteOverlay p-6 rounded-2xl shadow flex flex-col sm:flex-row justify-between items-center">
-            <p
-              className="text-xl"
-              style={{ fontFamily: "var(--font-description)" }}
-            >
-              Total: R{totalPrice}
+        {/* Empty State */}
+        {cartItems.length === 0 ? (
+          <div className="text-center space-y-4">
+            <p className="font-description text-lg text-neutral-blackText">
+              Your cart is currently empty.
             </p>
-
             <Link
-              href="/cart/shipping"
-              className="btn-cart mt-4 sm:mt-0 px-8 py-3 text-lg rounded-2xl shadow font-hand"
+              href="/preloved/store"
+              className="underline font-description text-neutral-palePurpleClickable"
             >
-              Continue to Shipping
+              Browse Pre-Loved Store →
             </Link>
           </div>
-        </div>
-      )}
+        ) : (
+          <div className="flex flex-col gap-6">
+
+            {/* Items */}
+            {cartItems.map((item) => (
+              <div
+                key={item.id}
+                className="flex flex-col sm:flex-row items-center gap-6 bg-white/60 p-5 rounded-2xl shadow-soft"
+              >
+                {/* Image */}
+                <div className="w-28 h-28 rounded-xl overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={120}
+                    height={120}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+
+                {/* Info */}
+                <div className="flex-1 text-center sm:text-left">
+                  <h2 className="font-product text-xl text-neutral-blackText">
+                    {item.name}
+                  </h2>
+                  <p className="font-description mt-1 text-neutral-blackText">
+                    R{item.price}
+                  </p>
+                </div>
+
+                {/* Quantity */}
+                <div className="flex items-center gap-3">
+                  <button
+                    onClick={() => decrement(item.id)}
+                    className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
+                  >
+                    –
+                  </button>
+
+                  <span className="font-description text-lg">
+                    {item.quantity}
+                  </span>
+
+                  <button
+                    onClick={() => increment(item.id)}
+                    className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
+                  >
+                    +
+                  </button>
+                </div>
+
+                {/* Remove */}
+                <button
+                  onClick={() => removeItem(item.id)}
+                  className="font-description text-sm underline text-red-500"
+                >
+                  Remove
+                </button>
+              </div>
+            ))}
+
+            {/* Total */}
+            <div className="bg-white/60 p-6 rounded-2xl shadow-soft flex flex-col sm:flex-row justify-between items-center">
+              <p className="font-description text-xl text-neutral-blackText">
+                Total: R{totalPrice}
+              </p>
+
+              <Link
+                href="/cart/shipping"
+                className="btn-cart mt-4 sm:mt-0 px-8 py-3 rounded-2xl"
+              >
+                Continue to Shipping
+              </Link>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 }
