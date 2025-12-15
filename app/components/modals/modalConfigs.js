@@ -2,7 +2,7 @@ export const modalConfigs = {
   contact: {
     title: "Contact Us",
     subject: "Contact Inquiry",
-    endpoint: "/api/sendEmail",
+    endpoint: "/api/contact",
     successMessage: "Message sent successfully!",
     fields: [
       { name: "name", label: "Your Name", type: "text", required: true },
@@ -14,7 +14,7 @@ export const modalConfigs = {
   ambuzzador: {
     title: "AmbuZZador Application",
     subject: "AmbuZZador Application",
-    endpoint: "/api/sendEmail",
+    endpoint: "/api/ambuzzador",
     successMessage: "Application sent successfully!",
     fields: [
       { name: "name", label: "Your Name", type: "text", required: true },
@@ -31,7 +31,7 @@ export const modalConfigs = {
   newsletter: {
     title: "Join the BuZZ Letter",
     subject: "Newsletter Subscription",
-    endpoint: "/api/sendEmail",
+    endpoint: "/api/newsletter",
     successMessage: "You’re officially part of the BuZZ!",
     fields: [
       { name: "email", label: "Your Email", type: "email", required: true },
@@ -41,7 +41,7 @@ export const modalConfigs = {
   donate: {
     title: "Donate to Help-a-Mama",
     subject: "Help-a-Mama Donation Offer",
-    endpoint: "/api/sendEmail",
+    endpoint: "/api/donate",
     successMessage: "Thank you so much for your generosity!",
     fields: [
       { name: "name", label: "Your Name", type: "text", required: true },
@@ -54,7 +54,7 @@ export const modalConfigs = {
   needHelp: {
     title: "Help-a-Mama Request",
     subject: "Help-a-Mama Request",
-    endpoint: "/api/sendEmail",
+    endpoint: "/api/needhelp",
     successMessage: "Your request has been sent!",
     fields: [
       { name: "name", label: "Your Name", type: "text", required: true },
