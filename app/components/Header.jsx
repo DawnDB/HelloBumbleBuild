@@ -2,7 +2,12 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { FaBars, FaTimes } from "react-icons/fa";
+import {
+  FaBars,
+  FaTimes,
+  FaUser,
+  FaShoppingCart,
+} from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 
 export default function Header() {
@@ -14,8 +19,12 @@ export default function Header() {
 
         {/* Left desktop links */}
         <div className="hidden md:flex items-center gap-6">
-          <Link href="/shop" className="text-sm font-medium">Shop</Link>
-          <Link href="/preloved" className="text-sm font-medium">Pre-Loved</Link>
+          <Link href="/shop" className="text-sm font-medium">
+            Shop
+          </Link>
+          <Link href="/preloved" className="text-sm font-medium">
+            Pre-Loved
+          </Link>
         </div>
 
         {/* Brand */}
@@ -26,7 +35,7 @@ export default function Header() {
           HelloBumble
         </Link>
 
-        {/* Mobile toggle */}
+        {/* Mobile menu toggle */}
         <div className="md:hidden">
           <button
             aria-label="Open menu"
@@ -37,10 +46,23 @@ export default function Header() {
           </button>
         </div>
 
-        {/* Right desktop links */}
-        <div className="hidden md:flex items-center gap-4">
-          <Link href="/profile" className="text-sm font-medium">Profile</Link>
-          <Link href="/cart" className="text-sm font-medium">Cart</Link>
+        {/* Right desktop icons */}
+        <div className="hidden md:flex items-center gap-5 text-xl">
+          <Link
+            href="/profile"
+            aria-label="Profile"
+            className="hover:text-neutral-palePurpleClickable transition"
+          >
+            <FaUser />
+          </Link>
+
+          <Link
+            href="/cart"
+            aria-label="Cart"
+            className="hover:text-neutral-palePurpleClickable transition"
+          >
+            <FaShoppingCart />
+          </Link>
         </div>
       </div>
 
