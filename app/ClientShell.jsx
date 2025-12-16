@@ -1,19 +1,37 @@
 "use client";
 
-import { useState } from "react";
+import { useState, createContext, useContext } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
+import UnifiedModal from "@/app/components/modals/UnifiedModal";
+import { modalConfigs } from "@/app/components/modals/modalConfigs";
 
-// Modals (unchanged)
-import BuzzLetterModal from "@/app/components/modals/NewsletterModal";
-import ContactModal from "@/app/components/modals/ContactModal";
+/**
+ * Modal Context
+ */
+const ModalContext = createContext(null);
+
+export function useModal() {
+  return useContext(ModalContext);
+}
 
 export default function ClientShell({ children }) {
-  const [showNewsletter, setShowNewsletter] = useState(false);
-  const [showContactModal, setShowContactModal] = useState(false);
+  const [activeModal, setActiveModal] = useState(null);
+
+  const openModal = (key) => {
+    if (!modalConfigs[key]) {
+      console.warn(`Modal key "${key}" does not exist.`);
+      return;
+    }
+    setActiveModal(key);
+  };
+
+  const closeModal = () => {
+    setActiveModal(null);
+  };
 
   return (
-    <>
+    <ModalContext.Provider value={{ openModal, closeModal }}>
       <Header />
 
       <main className="pt-32 pb-48">
@@ -21,19 +39,16 @@ export default function ClientShell({ children }) {
       </main>
 
       <Footer
-        onOpenNewsletter={() => setShowNewsletter(true)}
-        onOpenContact={() => setShowContactModal(true)}
+        onOpenNewsletter={() => openModal("newsletter")}
+        onOpenContact={() => openModal("contact")}
       />
 
-      <BuzzLetterModal
-        isOpen={showNewsletter}
-        onClose={() => setShowNewsletter(false)}
+      <UnifiedModal
+        isOpen={!!activeModal}
+        modalKey={activeModal}
+        config={activeModal ? modalConfigs[activeModal] : null}
+        onClose={closeModal}
       />
-
-      <ContactModal
-        isOpen={showContactModal}
-        onClose={() => setShowContactModal(false)}
-      />
-    </>
+    </ModalContext.Provider>
   );
 }
