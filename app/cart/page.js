@@ -7,16 +7,10 @@ import Image from "next/image";
 export default function CartPage() {
   const [cartItems, setCartItems] = useState([]);
 
-  // Load cart
   useEffect(() => {
     const saved = localStorage.getItem("hellobumbleCart");
     if (saved) setCartItems(JSON.parse(saved));
   }, []);
-
-  // Save cart
-  useEffect(() => {
-    localStorage.setItem("hellobumbleCart", JSON.stringify(cartItems));
-  }, [cartItems]);
 
   const increment = (cartKey) =>
     setCartItems((items) =>
@@ -41,107 +35,100 @@ export default function CartPage() {
       items.filter((i) => i.cartKey !== cartKey)
     );
 
+  const updateCart = () =>
+    localStorage.setItem(
+      "hellobumbleCart",
+      JSON.stringify(cartItems)
+    );
+
+  const cartTotal = cartItems.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
+
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
       <div className="w-full max-w-4xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10">
 
-        {/* Header */}
-        <header className="text-center mb-12">
-          <h1 className="text-4xl md:text-5xl font-hellobumble text-neutral-blackText mb-3">
-            Your Cart
-          </h1>
-          <p className="font-description italic text-neutral-blackText">
-            A few beautiful essentials, almost ready for home.
-          </p>
-        </header>
+        <h1 className="text-4xl font-hellobumble text-center mb-10">
+          Your Cart
+        </h1>
 
-        {/* Empty State */}
         {cartItems.length === 0 ? (
-          <div className="text-center space-y-4">
-            <p className="font-description text-lg text-neutral-blackText">
-              Your cart is currently empty.
-            </p>
-            <Link
-              href="/shop"
-              className="underline font-description text-neutral-palePurpleClickable"
-            >
-              Browse the shop →
-            </Link>
-          </div>
+          <p className="text-center">Your cart is empty.</p>
         ) : (
           <div className="flex flex-col gap-6">
             {cartItems.map((item) => (
               <div
                 key={item.cartKey}
-                className="flex flex-col sm:flex-row items-center gap-6 bg-white/60 p-5 rounded-2xl shadow-soft"
+                className="flex flex-col sm:flex-row gap-6 bg-white/60 p-5 rounded-2xl"
               >
-                {/* Image */}
-                {item.image && (
-                  <div className="w-28 h-28 rounded-xl overflow-hidden">
-                    <Image
-                      src={item.image}
-                      alt={item.name}
-                      width={120}
-                      height={120}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                )}
+                <div className="w-28 h-28 rounded-xl overflow-hidden">
+                  <Image
+                    src={item.image}
+                    alt={item.name}
+                    width={120}
+                    height={120}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
 
-                {/* Info */}
-                <div className="flex-1 text-center sm:text-left">
-                  <h2 className="font-product text-xl text-neutral-blackText">
+                <div className="flex-1">
+                  <h2 className="font-product text-xl">
                     {item.name}
                   </h2>
 
                   <p className="font-description text-sm opacity-80">
-                    {item.color && `Color: ${item.color}`}
-                    {item.size && ` • Size: ${item.size}`}
-                    {item.style && ` • Style: ${item.style}`}
+                    Color: {item.color} • Size: {item.size}
+                  </p>
+
+                  <p className="font-description mt-2">
+                    R{item.price} × {item.quantity} ={" "}
+                    <strong>
+                      R{item.price * item.quantity}
+                    </strong>
                   </p>
                 </div>
 
-                {/* Quantity */}
                 <div className="flex items-center gap-3">
-                  <button
-                    onClick={() => decrement(item.cartKey)}
-                    className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
-                  >
+                  <button onClick={() => decrement(item.cartKey)}>
                     –
                   </button>
-
-                  <span className="font-description text-lg">
-                    {item.quantity}
-                  </span>
-
-                  <button
-                    onClick={() => increment(item.cartKey)}
-                    className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
-                  >
+                  <span>{item.quantity}</span>
+                  <button onClick={() => increment(item.cartKey)}>
                     +
                   </button>
                 </div>
 
-                {/* Remove */}
                 <button
                   onClick={() => removeItem(item.cartKey)}
-                  className="font-description text-sm underline text-red-500"
+                  className="underline text-red-500"
                 >
                   Remove
                 </button>
               </div>
             ))}
 
-            {/* Continue to Shipping */}
-            <div className="bg-white/60 p-6 rounded-2xl shadow-soft flex justify-center">
+            {/* Cart summary */}
+            <div className="bg-white/60 p-6 rounded-2xl flex flex-col gap-4">
+              <p className="text-xl text-center">
+                Cart Total: <strong>R{cartTotal}</strong>
+              </p>
+
+              <button
+                onClick={updateCart}
+                className="btn-primary"
+              >
+                Update Cart
+              </button>
+
               <Link
                 href="/cart/shipping"
-                className="btn-cart px-10 py-4 rounded-2xl"
+                className="btn-cart text-center"
               >
                 Continue to Shipping →
               </Link>
             </div>
-
           </div>
         )}
       </div>
