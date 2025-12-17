@@ -12,9 +12,9 @@ export const products = [
     prices: { Small: 180, Medium: 200, Large: 220 },
     styles: null,
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/day-grey.jpg" },
+      { name: "Pink", image: "/placeholders/day-pink.jpg" },
+      { name: "Blue", image: "/placeholders/day-blue.jpg" }
     ]
   },
   {
@@ -26,9 +26,9 @@ export const products = [
     prices: { Small: 220, Medium: 240, Large: 260 },
     styles: null,
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/night-grey.jpg" },
+      { name: "Pink", image: "/placeholders/night-pink.jpg" },
+      { name: "Blue", image: "/placeholders/night-blue.jpg" }
     ]
   },
   {
@@ -40,9 +40,9 @@ export const products = [
     prices: { Small: 150, Medium: 170, Large: 190 },
     styles: null,
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/flat-grey.jpg" },
+      { name: "Pink", image: "/placeholders/flat-pink.jpg" },
+      { name: "Blue", image: "/placeholders/flat-blue.jpg" }
     ]
   },
   {
@@ -54,9 +54,9 @@ export const products = [
     prices: { Small: 160, Medium: 180, Large: 200 },
     styles: null,
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/pre-grey.jpg" },
+      { name: "Pink", image: "/placeholders/pre-pink.jpg" },
+      { name: "Blue", image: "/placeholders/pre-blue.jpg" }
     ]
   },
   {
@@ -68,9 +68,9 @@ export const products = [
     prices: { Small: 190, Medium: 210, Large: 230 },
     styles: ["Snaps", "Pull-ups"],
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/cozy-grey.jpg" },
+      { name: "Pink", image: "/placeholders/cozy-pink.jpg" },
+      { name: "Blue", image: "/placeholders/cozy-blue.jpg" }
     ]
   },
   {
@@ -82,9 +82,9 @@ export const products = [
     prices: { Small: 180, Medium: 200, Large: 220 },
     styles: ["Snaps", "Pull-ups"],
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/fleezy-grey.jpg" },
+      { name: "Pink", image: "/placeholders/fleezy-pink.jpg" },
+      { name: "Blue", image: "/placeholders/fleezy-blue.jpg" }
     ]
   },
   {
@@ -124,9 +124,9 @@ export const products = [
     prices: { Small: 200, Large: 220 },
     styles: null,
     colors: [
-      { name: "Leaf", image: "/printedPUL/leaf.jpg" },
-      { name: "Black Heart", image: "/printedPUL/blackheart.jpg" },
-      { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" }
+      { name: "Grey", image: "/placeholders/trainiez-grey.jpg" },
+      { name: "Pink", image: "/placeholders/trainiez-pink.jpg" },
+      { name: "Blue", image: "/placeholders/trainiez-blue.jpg" }
     ]
   },
 
