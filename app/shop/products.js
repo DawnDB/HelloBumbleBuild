@@ -100,6 +100,7 @@ export const products = [
     category: "diapering",
     description: "Swim nappies made for splashy adventures.",
     sizes: ["XS", "S", "M", "L", "XL"],
+    prices: { XS: 160, S: 170, M: 180, L: 190, XL: 200 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -113,6 +114,7 @@ export const products = [
     category: "diapering",
     description: "Perfect for potty training confidence and independence.",
     sizes: ["Small", "Large"],
+    prices: { Small: 200, Large: 220 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -126,11 +128,12 @@ export const products = [
   /* ===================== */
 
   {
-    slug: "mamzy",
-    name: "MamZy",
+    slug: "dripzy",
+    name: "DripZy",
     category: "mom",
-    description: "Comfort-focused essentials made just for moms.",
+    description: "Absorbent and discreet protection for everyday confidence.",
     sizes: ["Small", "Large"],
+    prices: { Small: 260, Large: 290 },
     styles: null,
     colors: [
       { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" },
@@ -141,10 +144,10 @@ export const products = [
     ]
   },
   {
-    slug: "dripzy",
-    name: "DripZy",
+    slug: "mamzy",
+    name: "MamZy",
     category: "mom",
-    description: "Absorbent and discreet protection for everyday confidence.",
+    description: "Comfort-focused essentials made just for moms.",
     sizes: null,
     styles: null,
     colors: [
