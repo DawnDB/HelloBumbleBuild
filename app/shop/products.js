@@ -156,6 +156,7 @@ export const products = [
     category: "mom",
     description: "Comfort-focused essentials made just for moms.",
     sizes: null,
+    price: 180,
     styles: null,
     colors: [
       { name: "Color Leaf", image: "/printedPUL/colorleaf.jpg" },
@@ -176,6 +177,7 @@ export const products = [
     category: "essentials",
     description: "Portable, practical changing solutions for on-the-go parents.",
     sizes: null,
+    price: 100,
     styles: null,
     colors: [
       { name: "Grey Dino", image: "/printedPUL/greydino.jpg" },
@@ -196,6 +198,7 @@ export const products = [
     category: "essentials",
     description: "Soft and soothing essentials for peaceful sleep routines.",
     sizes: null,
+    price: 180,
     styles: null,
     colors: [
       { name: "Grey Dino", image: "/printedPUL/greydino.jpg" },
@@ -216,6 +219,7 @@ export const products = [
     category: "essentials",
     description: "Secure fastening accessories for cloth nappies.",
     sizes: null,
+    price: 10,
     styles: null,
     colors: [
       { name: "Pink", image: "/placeholders/snappi-pink.jpg" },
@@ -231,6 +235,7 @@ export const products = [
     category: "essentials",
     description: "Snap extenders designed to grow with your baby.",
     sizes: null,
+    price: 20,
     styles: null,
     colors: [
       { name: "White", image: "/placeholders/extender-white.jpg" },
