@@ -1,42 +1,38 @@
 "use client";
 
-import { useState } from "react";
-import NeedHelpModal from "@/components/modals/NeedHelpModal";
-import DonateModal from "@/components/modals/DonateModal";
+import { useModal } from "@/app/components/modals/ModalContext";
 
 export default function HelpAMamaPage() {
-  const [showNeedModal, setShowNeedModal] = useState(false);
-  const [showDonateModal, setShowDonateModal] = useState(false);
+  const { openModal } = useModal();
 
   return (
-    <div className="min-h-screen bg-[url('/pastel-marble.jpg')] bg-cover bg-center bg-no-repeat px-6 py-16 text-black">
-      <div className="max-w-3xl mx-auto bg-white/20 backdrop-blur-md rounded-2xl p-6 shadow">
-        <h1 className="text-4xl mb-6 font-hellobumble">HelloBumble Help-a-Mama</h1>
+    <div className="min-h-screen px-6 py-20 flex flex-col items-center font-description">
+      <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 text-center">
+        <h1 className="text-5xl mb-6 font-hellobumble text-neutral-blackText">
+          HelloBumble Help-a-Mama
+        </h1>
 
-        <p className="font-description leading-relaxed">
+        <p className="leading-relaxed">
           We are firm believers that God will provide and sometimes uses others
           to do so. If you are in need,{" "}
-          <span
-            className="text-palePurpleClickable underline cursor-pointer"
-            onClick={() => setShowNeedModal(true)}
+          <button
+            onClick={() => openModal("needhelp")}
+            className="text-palePurpleClickable underline font-medium"
           >
             reach out
-          </span>
-          .<br /><br />
+          </button>
+          .
+          <br /><br />
           If you are able to give, please fill out{" "}
-          <span
-            className="text-palePurpleClickable underline cursor-pointer"
-            onClick={() => setShowDonateModal(true)}
+          <button
+            onClick={() => openModal("donate")}
+            className="text-palePurpleClickable underline font-medium"
           >
             this form
-          </span>{" "}
+          </button>{" "}
           to donate your nappies to Help-a-Mama.
         </p>
       </div>
-
-      {/* Modals */}
-      <NeedHelpModal show={showNeedModal} onClose={() => setShowNeedModal(false)} />
-      <DonateModal show={showDonateModal} onClose={() => setShowDonateModal(false)} />
     </div>
   );
 }
