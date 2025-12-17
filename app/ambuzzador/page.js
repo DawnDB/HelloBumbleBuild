@@ -1,16 +1,13 @@
 "use client";
 
-import { useState } from "react";
-import AmbuzzadorModal from "@/app/components/modals/AmbuzzadorModal";
+import { useModal } from "@/app/components/modals/ModalContext";
 
 export default function AmbuzzadorPage() {
-  const [open, setOpen] = useState(false);
+  const { openModal } = useModal();
 
   return (
     <div className="min-h-screen px-6 py-20 flex flex-col items-center font-description">
-      
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 text-center">
-        
         <h1 className="text-5xl mb-6 font-hellobumble text-neutral-blackText">
           HelloBumble AmbuZZador Program
         </h1>
@@ -41,23 +38,17 @@ export default function AmbuzzadorPage() {
         </h2>
 
         <p className="max-w-2xl mx-auto mb-10 opacity-90 leading-relaxed">
-          Click the button below to apply. A modal will open with the form.
+          Click the button below to apply. A form will open.
           Once submitted, we'll review your application and contact you.
         </p>
 
         <button
-          onClick={() => setOpen(true)}
+          onClick={() => openModal("ambuzzador")}
           className="btn-primary"
         >
           Become an AmbuZZador
         </button>
       </div>
-
-      {/* Modal */}
-      <AmbuzzadorModal
-        isOpen={open}
-        onClose={() => setOpen(false)}
-      />
     </div>
   );
 }
