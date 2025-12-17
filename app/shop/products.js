@@ -9,6 +9,7 @@ export const products = [
     category: "diapering",
     description: "A comfy, absorbent fitted nappy perfect for everyday wear.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 180, Medium: 200, Large: 220 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -22,6 +23,7 @@ export const products = [
     category: "diapering",
     description: "Extra absorbency for peaceful nights and dry mornings.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 220, Medium: 240, Large: 260 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -35,6 +37,7 @@ export const products = [
     category: "diapering",
     description: "Breathable, trim flats with endless folding possibilities.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 150, Medium: 170, Large: 190 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -48,6 +51,7 @@ export const products = [
     category: "diapering",
     description: "Soft, stretchy pre-flats designed for comfort and ease.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 160, Medium: 180, Large: 200 },
     styles: null,
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
