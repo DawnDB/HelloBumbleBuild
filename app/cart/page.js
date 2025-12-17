@@ -18,29 +18,28 @@ export default function CartPage() {
     localStorage.setItem("hellobumbleCart", JSON.stringify(cartItems));
   }, [cartItems]);
 
-  const increment = (id) =>
+  const increment = (cartKey) =>
     setCartItems((items) =>
       items.map((i) =>
-        i.id === id ? { ...i, quantity: i.quantity + 1 } : i
-      )
-    );
-
-  const decrement = (id) =>
-    setCartItems((items) =>
-      items.map((i) =>
-        i.id === id
-          ? { ...i, quantity: i.quantity > 1 ? i.quantity - 1 : 1 }
+        i.cartKey === cartKey
+          ? { ...i, quantity: i.quantity + 1 }
           : i
       )
     );
 
-  const removeItem = (id) =>
-    setCartItems((items) => items.filter((i) => i.id !== id));
+  const decrement = (cartKey) =>
+    setCartItems((items) =>
+      items.map((i) =>
+        i.cartKey === cartKey
+          ? { ...i, quantity: Math.max(1, i.quantity - 1) }
+          : i
+      )
+    );
 
-  const totalPrice = cartItems.reduce(
-    (t, item) => t + item.price * item.quantity,
-    0
-  );
+  const removeItem = (cartKey) =>
+    setCartItems((items) =>
+      items.filter((i) => i.cartKey !== cartKey)
+    );
 
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
@@ -63,46 +62,49 @@ export default function CartPage() {
               Your cart is currently empty.
             </p>
             <Link
-              href="/preloved/store"
+              href="/shop"
               className="underline font-description text-neutral-palePurpleClickable"
             >
-              Browse Pre-Loved Store →
+              Browse the shop →
             </Link>
           </div>
         ) : (
           <div className="flex flex-col gap-6">
-
-            {/* Items */}
             {cartItems.map((item) => (
               <div
-                key={item.id}
+                key={item.cartKey}
                 className="flex flex-col sm:flex-row items-center gap-6 bg-white/60 p-5 rounded-2xl shadow-soft"
               >
                 {/* Image */}
-                <div className="w-28 h-28 rounded-xl overflow-hidden">
-                  <Image
-                    src={item.image}
-                    alt={item.name}
-                    width={120}
-                    height={120}
-                    className="object-cover w-full h-full"
-                  />
-                </div>
+                {item.image && (
+                  <div className="w-28 h-28 rounded-xl overflow-hidden">
+                    <Image
+                      src={item.image}
+                      alt={item.name}
+                      width={120}
+                      height={120}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                )}
 
                 {/* Info */}
                 <div className="flex-1 text-center sm:text-left">
                   <h2 className="font-product text-xl text-neutral-blackText">
                     {item.name}
                   </h2>
-                  <p className="font-description mt-1 text-neutral-blackText">
-                    R{item.price}
+
+                  <p className="font-description text-sm opacity-80">
+                    {item.color && `Color: ${item.color}`}
+                    {item.size && ` • Size: ${item.size}`}
+                    {item.style && ` • Style: ${item.style}`}
                   </p>
                 </div>
 
                 {/* Quantity */}
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() => decrement(item.id)}
+                    onClick={() => decrement(item.cartKey)}
                     className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
                   >
                     –
@@ -113,7 +115,7 @@ export default function CartPage() {
                   </span>
 
                   <button
-                    onClick={() => increment(item.id)}
+                    onClick={() => increment(item.cartKey)}
                     className="btn-quantity-blue w-8 h-8 rounded-xl text-lg"
                   >
                     +
@@ -122,7 +124,7 @@ export default function CartPage() {
 
                 {/* Remove */}
                 <button
-                  onClick={() => removeItem(item.id)}
+                  onClick={() => removeItem(item.cartKey)}
                   className="font-description text-sm underline text-red-500"
                 >
                   Remove
@@ -130,19 +132,16 @@ export default function CartPage() {
               </div>
             ))}
 
-            {/* Total */}
-            <div className="bg-white/60 p-6 rounded-2xl shadow-soft flex flex-col sm:flex-row justify-between items-center">
-              <p className="font-description text-xl text-neutral-blackText">
-                Total: R{totalPrice}
-              </p>
-
+            {/* Continue to Shipping */}
+            <div className="bg-white/60 p-6 rounded-2xl shadow-soft flex justify-center">
               <Link
                 href="/cart/shipping"
-                className="btn-cart mt-4 sm:mt-0 px-8 py-3 rounded-2xl"
+                className="btn-cart px-10 py-4 rounded-2xl"
               >
-                Continue to Shipping
+                Continue to Shipping →
               </Link>
             </div>
+
           </div>
         )}
       </div>
