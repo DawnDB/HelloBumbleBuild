@@ -61,6 +61,7 @@ export const products = [
     category: "diapering",
     description: "Reliable waterproof cover for daytime and nighttime use.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 190, Medium: 210, Large: 230 },
     styles: ["Snaps", "Pull-ups"],
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -74,6 +75,7 @@ export const products = [
     category: "diapering",
     description: "Lightweight and flexible cover for busy little movers.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 180, Medium: 200, Large: 220 },
     styles: ["Snaps", "Pull-ups"],
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
@@ -87,6 +89,7 @@ export const products = [
     category: "diapering",
     description: "Durable everyday cover with a gentle fit.",
     sizes: ["Small", "Medium", "Large"],
+    prices: { Small: 170, Medium: 190, Large: 210 },
     styles: ["Snaps", "Pull-ups"],
     colors: [
       { name: "Leaf", image: "/printedPUL/leaf.jpg" },
