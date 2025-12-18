@@ -1,47 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { useCart } from "@/app/context/CartContext";
 
 export default function CartPage() {
-  const [cartItems, setCartItems] = useState([]);
+  const {
+    cart,
+    updateQuantity,
+    removeFromCart,
+  } = useCart();
 
-  useEffect(() => {
-    const saved = localStorage.getItem("hellobumbleCart");
-    if (saved) setCartItems(JSON.parse(saved));
-  }, []);
-
-  const increment = (cartKey) =>
-    setCartItems((items) =>
-      items.map((i) =>
-        i.cartKey === cartKey
-          ? { ...i, quantity: i.quantity + 1 }
-          : i
-      )
-    );
-
-  const decrement = (cartKey) =>
-    setCartItems((items) =>
-      items.map((i) =>
-        i.cartKey === cartKey
-          ? { ...i, quantity: Math.max(1, i.quantity - 1) }
-          : i
-      )
-    );
-
-  const removeItem = (cartKey) =>
-    setCartItems((items) =>
-      items.filter((i) => i.cartKey !== cartKey)
-    );
-
-  const updateCart = () =>
-    localStorage.setItem(
-      "hellobumbleCart",
-      JSON.stringify(cartItems)
-    );
-
-  const cartTotal = cartItems.reduce(
+  const cartTotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
   );
@@ -54,11 +24,11 @@ export default function CartPage() {
           Your Cart
         </h1>
 
-        {cartItems.length === 0 ? (
+        {cart.length === 0 ? (
           <p className="text-center">Your cart is empty.</p>
         ) : (
           <div className="flex flex-col gap-6">
-            {cartItems.map((item) => (
+            {cart.map((item) => (
               <div
                 key={item.cartKey}
                 className="flex flex-col sm:flex-row gap-6 bg-white/60 p-5 rounded-2xl"
@@ -91,17 +61,28 @@ export default function CartPage() {
                 </div>
 
                 <div className="flex items-center gap-3">
-                  <button onClick={() => decrement(item.cartKey)}>
+                  <button
+                    onClick={() =>
+                      updateQuantity(item.cartKey, item.quantity - 1)
+                    }
+                    disabled={item.quantity === 1}
+                  >
                     –
                   </button>
+
                   <span>{item.quantity}</span>
-                  <button onClick={() => increment(item.cartKey)}>
+
+                  <button
+                    onClick={() =>
+                      updateQuantity(item.cartKey, item.quantity + 1)
+                    }
+                  >
                     +
                   </button>
                 </div>
 
                 <button
-                  onClick={() => removeItem(item.cartKey)}
+                  onClick={() => removeFromCart(item.cartKey)}
                   className="underline text-red-500"
                 >
                   Remove
@@ -114,13 +95,6 @@ export default function CartPage() {
               <p className="text-xl text-center">
                 Cart Total: <strong>R{cartTotal}</strong>
               </p>
-
-              <button
-                onClick={updateCart}
-                className="btn-primary"
-              >
-                Update Cart
-              </button>
 
               <Link
                 href="/cart/shipping"
