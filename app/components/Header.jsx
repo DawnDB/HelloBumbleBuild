@@ -7,11 +7,14 @@ import {
   FaTimes,
   FaUser,
   FaShoppingCart,
+  FaSignOutAlt,
 } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
+import { useAuth } from "@/app/context/AuthContext";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { user, signOut } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/30 shadow-soft">
@@ -48,14 +51,37 @@ export default function Header() {
 
         {/* Right desktop icons */}
         <div className="hidden md:flex items-center gap-5 text-xl">
-          <Link
-            href="/profile"
-            aria-label="Profile"
-            className="hover:text-neutral-palePurpleClickable transition"
-          >
-            <FaUser />
-          </Link>
 
+          {/* Auth-aware profile/login */}
+          {!user ? (
+            <Link
+              href="/login"
+              aria-label="Login"
+              className="hover:text-neutral-palePurpleClickable transition"
+            >
+              <FaUser />
+            </Link>
+          ) : (
+            <>
+              <Link
+                href="/profile"
+                aria-label="My Account"
+                className="hover:text-neutral-palePurpleClickable transition"
+              >
+                <FaUser />
+              </Link>
+
+              <button
+                onClick={signOut}
+                aria-label="Logout"
+                className="hover:text-neutral-palePurpleClickable transition"
+              >
+                <FaSignOutAlt />
+              </button>
+            </>
+          )}
+
+          {/* Cart */}
           <Link
             href="/cart"
             aria-label="Cart"
@@ -84,7 +110,11 @@ export default function Header() {
               </button>
             </div>
 
-            <MobileMenu closeMenu={() => setMobileOpen(false)} />
+            <MobileMenu
+              closeMenu={() => setMobileOpen(false)}
+              user={user}
+              onLogout={signOut}
+            />
           </div>
         </div>
       )}
