@@ -1,6 +1,7 @@
 import "./globals.css";
 import ClientShell from "./ClientShell";
 import localFont from "next/font/local";
+import { AuthProvider } from "@/app/context/AuthContext";
 
 const helloBumbleFont = localFont({
   src: "/fonts/GreatVibes-Regular.ttf",
@@ -30,7 +31,9 @@ export default function RootLayout({ children }) {
       className={`${helloBumbleFont.variable} ${productFont.variable} ${descriptionFont.variable}`}
     >
       <body className="min-h-screen bg-[url('/pastel-marble.jpg')] bg-cover bg-center text-neutral-blackText font-description">
-        <ClientShell>{children}</ClientShell>
+        <AuthProvider>
+          <ClientShell>{children}</ClientShell>
+        </AuthProvider>
       </body>
     </html>
   );
