@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, createContext, useContext } from "react";
+import { useState, useEffect, createContext, useContext } from "react";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import UnifiedModal from "@/app/components/modals/UnifiedModal";
 import { modalConfigs } from "@/app/components/modals/modalConfigs";
+import { supabase } from "@/app/lib/supabaseClient";
 
 /**
  * Modal Context
@@ -17,6 +18,26 @@ export function useModal() {
 
 export default function ClientShell({ children }) {
   const [activeModal, setActiveModal] = useState(null);
+
+  // 🔐 Supabase session state
+  const [session, setSession] = useState(null);
+
+  // 🔐 Session persistence (GLOBAL)
+  useEffect(() => {
+    // Load session on refresh
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Listen for login / logout
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   const openModal = (key) => {
     if (!modalConfigs[key]) {
