@@ -1,57 +1,188 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { supabase } from "@/app/lib/supabaseClient";
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
 
 export default function ShippingPage() {
   const router = useRouter();
   const { user, loading } = useAuth();
-  const { cart } = useCart();
+  const {
+    cart,
+    setShippingMethod,
+    setShippingCost,
+    setShippingAddressId,
+  } = useCart();
 
+  const [method, setMethod] = useState("free");
+  const [submitting, setSubmitting] = useState(false);
+
+  const [form, setForm] = useState({
+    full_name: "",
+    phone: "",
+    address_line1: "",
+    address_line2: "",
+    city: "",
+    province: "",
+    postal_code: "",
+    country: "South Africa",
+  });
+
+  // 🔐 Guards
   useEffect(() => {
-    if (!loading && !user) {
-      router.push("/login");
-    }
-    if (!loading && cart.length === 0) {
-      router.push("/cart");
-    }
+    if (!loading && !user) router.push("/login");
+    if (!loading && cart.length === 0) router.push("/cart");
   }, [user, loading, cart, router]);
 
   if (loading || !user) return null;
 
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = async () => {
+    if (!form.full_name || !form.phone || !form.address_line1 || !form.city || !form.province || !form.postal_code) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    setSubmitting(true);
+
+    const { data, error } = await supabase
+      .from("shipping_addresses")
+      .insert({
+        user_id: user.id,
+        ...form,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error(error);
+      alert("Something went wrong saving your address.");
+      setSubmitting(false);
+      return;
+    }
+
+    // ✅ Save to CartContext
+    setShippingAddressId(data.id);
+
+    if (method === "courier") {
+      setShippingMethod("courier");
+      setShippingCost(150);
+    } else {
+      setShippingMethod("free");
+      setShippingCost(0);
+    }
+
+    router.push("/cart/shipping/checkout");
+  };
+
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
-      <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10">
-        <h1 className="text-3xl font-hellobumble text-center mb-6">
+      <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 space-y-8">
+
+        <h1 className="text-3xl font-hellobumble text-center">
           Shipping Details
         </h1>
 
-        {/* SHIPPING OPTIONS */}
-        <div className="space-y-4">
-          <label className="block">
-            <input type="radio" name="shipping" value="free" />
-            <span className="ml-2">
-              Free – Arrange own courier pickup
+        {/* 🚚 Shipping Method */}
+        <div className="space-y-3">
+          <p className="font-description font-semibold">Delivery option</p>
+
+          <label className="flex items-center gap-3 bg-white/60 p-4 rounded-xl cursor-pointer">
+            <input
+              type="radio"
+              name="shipping"
+              checked={method === "free"}
+              onChange={() => setMethod("free")}
+            />
+            <span className="font-description">
+              Free — Arrange own courier pickup
             </span>
           </label>
 
-          <label className="block">
-            <input type="radio" name="shipping" value="courier" />
-            <span className="ml-2">
-              R150 – Courier Guy delivery
+          <label className="flex items-center gap-3 bg-white/60 p-4 rounded-xl cursor-pointer">
+            <input
+              type="radio"
+              name="shipping"
+              checked={method === "courier"}
+              onChange={() => setMethod("courier")}
+            />
+            <span className="font-description">
+              R150 — Courier Guy delivery
             </span>
           </label>
         </div>
 
-        {/* ADDRESS FORM (next step) */}
-        <p className="mt-8 text-sm opacity-70">
-          Address form will auto-fill from your profile.
-        </p>
+        {/* 📦 Address Form */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <input
+            name="full_name"
+            placeholder="Full name *"
+            value={form.full_name}
+            onChange={handleChange}
+            className="input"
+          />
+          <input
+            name="phone"
+            placeholder="Phone number *"
+            value={form.phone}
+            onChange={handleChange}
+            className="input"
+          />
+          <input
+            name="address_line1"
+            placeholder="Address line 1 *"
+            value={form.address_line1}
+            onChange={handleChange}
+            className="input md:col-span-2"
+          />
+          <input
+            name="address_line2"
+            placeholder="Address line 2 (optional)"
+            value={form.address_line2}
+            onChange={handleChange}
+            className="input md:col-span-2"
+          />
+          <input
+            name="city"
+            placeholder="City *"
+            value={form.city}
+            onChange={handleChange}
+            className="input"
+          />
+          <input
+            name="province"
+            placeholder="Province *"
+            value={form.province}
+            onChange={handleChange}
+            className="input"
+          />
+          <input
+            name="postal_code"
+            placeholder="Postal code *"
+            value={form.postal_code}
+            onChange={handleChange}
+            className="input"
+          />
+          <input
+            name="country"
+            value={form.country}
+            onChange={handleChange}
+            className="input"
+          />
+        </div>
 
-        <button className="btn-cart mt-6 w-full">
-          Continue to Checkout →
+        {/* 👉 Continue */}
+        <button
+          onClick={handleSubmit}
+          disabled={submitting}
+          className="btn-cart w-full"
+        >
+          {submitting ? "Saving…" : "Continue to Checkout →"}
         </button>
       </div>
     </div>
