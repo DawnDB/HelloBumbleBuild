@@ -76,7 +76,8 @@ export default function ShippingPage() {
     setSubmitting(true);
 
     try {
-      // 🔎 Check for existing address
+      // NOTE: For now we reuse the latest address.
+      // Later this should support multiple saved addresses.
       const { data: existing } = await supabase
         .from("shipping_addresses")
         .select("id")
@@ -88,7 +89,6 @@ export default function ShippingPage() {
       let address;
 
       if (existing) {
-        // 🔄 Update existing address
         const { data, error } = await supabase
           .from("shipping_addresses")
           .update(form)
@@ -99,7 +99,6 @@ export default function ShippingPage() {
         if (error) throw error;
         address = data;
       } else {
-        // ➕ Insert new address
         const { data, error } = await supabase
           .from("shipping_addresses")
           .insert({
@@ -113,9 +112,6 @@ export default function ShippingPage() {
         address = data;
       }
 
-      /* ================================
-         ✅ SAVE SHIPPING STATE
-      ================================= */
       setShippingAddressId(address.id);
 
       if (method === "courier") {
@@ -126,7 +122,6 @@ export default function ShippingPage() {
         setShippingCost(0);
       }
 
-      // 💾 Persist for refresh / IPN safety
       localStorage.setItem(
         "hellobumbleShipping",
         JSON.stringify({
@@ -140,13 +135,10 @@ export default function ShippingPage() {
     } catch (err) {
       console.error(err);
       alert("Something went wrong saving your shipping details.");
-      setSubmitting(false);
+      setSubmitting(false); // ✅ FIX
     }
   };
 
-  /* ================================
-     🎨 UI
-  ================================= */
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 space-y-8">
@@ -155,100 +147,40 @@ export default function ShippingPage() {
           Shipping Details
         </h1>
 
-        {/* 🚚 Shipping Method */}
         <div className="space-y-3">
           <p className="font-description font-semibold">Delivery option</p>
 
           <label className="flex items-center gap-3 bg-white/60 p-4 rounded-xl cursor-pointer">
             <input
               type="radio"
-              name="shipping"
               checked={method === "free"}
               onChange={() => setMethod("free")}
             />
-            <span className="font-description">
-              Free — Arrange own courier pickup
-            </span>
+            <span>Free — Arrange own courier pickup</span>
           </label>
 
           <label className="flex items-center gap-3 bg-white/60 p-4 rounded-xl cursor-pointer">
             <input
               type="radio"
-              name="shipping"
               checked={method === "courier"}
               onChange={() => setMethod("courier")}
             />
-            <span className="font-description">
-              R150 — Courier Guy delivery
-            </span>
+            <span>R150 — Courier Guy delivery</span>
           </label>
         </div>
 
-        {/* 📍 Address Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <input
-            name="full_name"
-            placeholder="Full name *"
-            value={form.full_name}
-            onChange={handleChange}
-            className="input"
-          />
-          <input
-            name="phone"
-            placeholder="Phone number *"
-            value={form.phone}
-            onChange={handleChange}
-            className="input"
-          />
-          <input
-            name="address_line1"
-            placeholder="Address line 1 *"
-            value={form.address_line1}
-            onChange={handleChange}
-            className="input md:col-span-2"
-          />
-          <input
-            name="address_line2"
-            placeholder="Address line 2 (optional)"
-            value={form.address_line2}
-            onChange={handleChange}
-            className="input md:col-span-2"
-          />
-          <input
-            name="city"
-            placeholder="City *"
-            value={form.city}
-            onChange={handleChange}
-            className="input"
-          />
-          <input
-            name="province"
-            placeholder="Province *"
-            value={form.province}
-            onChange={handleChange}
-            className="input"
-          />
-          <input
-            name="postal_code"
-            placeholder="Postal code *"
-            value={form.postal_code}
-            onChange={handleChange}
-            className="input"
-          />
-          <input
-            name="country"
-            value={form.country}
-            onChange={handleChange}
-            className="input"
-          />
+          <input name="full_name" placeholder="Full name *" value={form.full_name} onChange={handleChange} className="input" />
+          <input name="phone" placeholder="Phone number *" value={form.phone} onChange={handleChange} className="input" />
+          <input name="address_line1" placeholder="Address line 1 *" value={form.address_line1} onChange={handleChange} className="input md:col-span-2" />
+          <input name="address_line2" placeholder="Address line 2" value={form.address_line2} onChange={handleChange} className="input md:col-span-2" />
+          <input name="city" placeholder="City *" value={form.city} onChange={handleChange} className="input" />
+          <input name="province" placeholder="Province *" value={form.province} onChange={handleChange} className="input" />
+          <input name="postal_code" placeholder="Postal code *" value={form.postal_code} onChange={handleChange} className="input" />
+          <input name="country" value={form.country} onChange={handleChange} className="input" />
         </div>
 
-        {/* 👉 Continue */}
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className="btn-cart w-full"
-        >
+        <button onClick={handleSubmit} disabled={submitting} className="btn-cart w-full">
           {submitting ? "Saving…" : "Continue to Checkout →"}
         </button>
       </div>
