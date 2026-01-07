@@ -30,56 +30,123 @@ export default function ShippingPage() {
     country: "South Africa",
   });
 
-  // 🔐 Guards
+  /* ================================
+     🔐 PAGE GUARDS
+  ================================= */
   useEffect(() => {
-    if (!loading && !user) router.push("/login");
-    if (!loading && cart.length === 0) router.push("/cart");
+    if (!loading && !user) {
+      router.replace("/login");
+      return;
+    }
+
+    if (!loading && cart.length === 0) {
+      router.replace("/cart");
+      return;
+    }
   }, [user, loading, cart, router]);
 
   if (loading || !user) return null;
 
+  /* ================================
+     📝 FORM HANDLING
+  ================================= */
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setForm((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
   };
 
+  /* ================================
+     📦 SUBMIT SHIPPING
+  ================================= */
   const handleSubmit = async () => {
-    if (!form.full_name || !form.phone || !form.address_line1 || !form.city || !form.province || !form.postal_code) {
+    if (
+      !form.full_name ||
+      !form.phone ||
+      !form.address_line1 ||
+      !form.city ||
+      !form.province ||
+      !form.postal_code
+    ) {
       alert("Please fill in all required fields.");
       return;
     }
 
     setSubmitting(true);
 
-    const { data, error } = await supabase
-      .from("shipping_addresses")
-      .insert({
-        user_id: user.id,
-        ...form,
-      })
-      .select()
-      .single();
+    try {
+      // 🔎 Check for existing address
+      const { data: existing } = await supabase
+        .from("shipping_addresses")
+        .select("id")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .single();
 
-    if (error) {
-      console.error(error);
-      alert("Something went wrong saving your address.");
+      let address;
+
+      if (existing) {
+        // 🔄 Update existing address
+        const { data, error } = await supabase
+          .from("shipping_addresses")
+          .update(form)
+          .eq("id", existing.id)
+          .select()
+          .single();
+
+        if (error) throw error;
+        address = data;
+      } else {
+        // ➕ Insert new address
+        const { data, error } = await supabase
+          .from("shipping_addresses")
+          .insert({
+            user_id: user.id,
+            ...form,
+          })
+          .select()
+          .single();
+
+        if (error) throw error;
+        address = data;
+      }
+
+      /* ================================
+         ✅ SAVE SHIPPING STATE
+      ================================= */
+      setShippingAddressId(address.id);
+
+      if (method === "courier") {
+        setShippingMethod("courier");
+        setShippingCost(150);
+      } else {
+        setShippingMethod("free");
+        setShippingCost(0);
+      }
+
+      // 💾 Persist for refresh / IPN safety
+      localStorage.setItem(
+        "hellobumbleShipping",
+        JSON.stringify({
+          addressId: address.id,
+          method,
+          cost: method === "courier" ? 150 : 0,
+        })
+      );
+
+      router.push("/cart/shipping/checkout");
+    } catch (err) {
+      console.error(err);
+      alert("Something went wrong saving your shipping details.");
       setSubmitting(false);
-      return;
     }
-
-    // ✅ Save to CartContext
-    setShippingAddressId(data.id);
-
-    if (method === "courier") {
-      setShippingMethod("courier");
-      setShippingCost(150);
-    } else {
-      setShippingMethod("free");
-      setShippingCost(0);
-    }
-
-    router.push("/cart/shipping/checkout");
   };
 
+  /* ================================
+     🎨 UI
+  ================================= */
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 space-y-8">
@@ -117,7 +184,7 @@ export default function ShippingPage() {
           </label>
         </div>
 
-        {/* 📦 Address Form */}
+        {/* 📍 Address Form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input
             name="full_name"
