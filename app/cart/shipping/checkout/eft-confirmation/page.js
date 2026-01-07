@@ -6,6 +6,18 @@ export default function EFTConfirmationPage() {
   const params = useSearchParams();
   const orderNumber = params.get("order");
 
+  // 🔐 Safety guard
+  if (!orderNumber) {
+    return (
+      <div className="max-w-3xl mx-auto px-4 py-20 text-center">
+        <p>Your order reference could not be found.</p>
+        <p className="text-sm mt-2">
+          Please contact us if you need assistance.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-3xl mx-auto px-4 py-16 text-center">
       <h1 className="text-3xl font-product mb-4">
