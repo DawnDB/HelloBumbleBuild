@@ -21,10 +21,12 @@ export default function CheckoutPage() {
   const [orderNumber] = useState(generateOrderNumber());
   const [submitting, setSubmitting] = useState(false);
 
-  /* ================================
-     🔐 LOAD + GUARDS
-  ================================= */
   useEffect(() => {
+    if (!loading && !user) {
+      router.replace("/login");
+      return;
+    }
+
     const savedShipping = localStorage.getItem("hellobumbleShipping");
 
     if (!savedShipping || cart.length === 0) {
@@ -40,20 +42,14 @@ export default function CheckoutPage() {
       .select("*")
       .eq("id", parsed.addressId)
       .single()
-      .then(({ data, error }) => {
-        if (error || !data) {
-          router.replace("/cart/shipping");
-          return;
-        }
-        setAddress(data);
+      .then(({ data }) => {
+        if (!data) router.replace("/cart/shipping");
+        else setAddress(data);
       });
-  }, [cart, router]);
+  }, [user, loading, cart, router]);
 
   if (loading || !shipping || !address) return null;
 
-  /* ================================
-     💰 TOTAL
-  ================================= */
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0
@@ -61,9 +57,6 @@ export default function CheckoutPage() {
 
   const total = subtotal + shipping.cost;
 
-  /* ================================
-     🧾 CREATE ORDER
-  ================================= */
   const createOrder = async () => {
     setSubmitting(true);
 
@@ -73,7 +66,7 @@ export default function CheckoutPage() {
       total,
       payment_method: paymentMethod,
       shipping_address_id: shipping.addressId,
-      status: "pending",
+      status: paymentMethod === "payfast" ? "awaiting_payment" : "pending",
       items: cart,
     });
 
@@ -87,9 +80,6 @@ export default function CheckoutPage() {
     return true;
   };
 
-  /* ================================
-     🎨 UI
-  ================================= */
   return (
     <div className="max-w-6xl mx-auto px-6 py-20">
       <h1 className="text-3xl font-hellobumble mb-10 text-center">
@@ -97,43 +87,25 @@ export default function CheckoutPage() {
       </h1>
 
       <div className="grid md:grid-cols-2 gap-10">
-
-        {/* 📦 Shipping summary */}
         <div className="space-y-4 bg-neutral-whiteOverlay p-6 rounded-2xl shadow-soft">
           <h2 className="font-semibold">Shipping Details</h2>
           <p>{address.full_name}</p>
           <p>{address.phone}</p>
-          <p>
-            {address.address_line1}
-            {address.address_line2 && `, ${address.address_line2}`}
-          </p>
-          <p>
-            {address.city}, {address.province}, {address.postal_code}
-          </p>
+          <p>{address.address_line1}</p>
+          <p>{address.city}, {address.province}</p>
 
-          {/* 💳 Payment method */}
           <div className="mt-6 space-y-2">
             <label className="flex gap-2 items-center">
-              <input
-                type="radio"
-                checked={paymentMethod === "payfast"}
-                onChange={() => setPaymentMethod("payfast")}
-              />
-              PayFast (Card / Instant EFT)
+              <input type="radio" checked={paymentMethod === "payfast"} onChange={() => setPaymentMethod("payfast")} />
+              PayFast
             </label>
-
             <label className="flex gap-2 items-center">
-              <input
-                type="radio"
-                checked={paymentMethod === "eft"}
-                onChange={() => setPaymentMethod("eft")}
-              />
-              Manual EFT (FNB Business)
+              <input type="radio" checked={paymentMethod === "eft"} onChange={() => setPaymentMethod("eft")} />
+              Manual EFT
             </label>
           </div>
         </div>
 
-        {/* 🧾 Order summary */}
         <div className="bg-white/70 rounded-2xl p-6 shadow">
           {cart.map((item) => (
             <div key={item.slug} className="flex justify-between mb-2">
@@ -144,26 +116,11 @@ export default function CheckoutPage() {
 
           <hr className="my-4" />
 
-          <div className="flex justify-between">
-            <span>Subtotal</span>
-            <span>R{subtotal}</span>
-          </div>
-
-          <div className="flex justify-between">
-            <span>Shipping</span>
-            <span>R{shipping.cost}</span>
-          </div>
-
-          <div className="flex justify-between font-bold mt-2">
+          <div className="flex justify-between font-bold">
             <span>Total</span>
             <span>R{total}</span>
           </div>
 
-          <p className="text-sm mt-2">
-            Order number: <strong>{orderNumber}</strong>
-          </p>
-
-          {/* 💳 PAYMENT */}
           {paymentMethod === "payfast" ? (
             <form
               action="/api/payfast"
@@ -181,11 +138,8 @@ export default function CheckoutPage() {
                 name="custom_str1"
                 value={JSON.stringify({ cart, shipping, total })}
               />
-              <button
-                disabled={submitting}
-                className="w-full rounded-2xl bg-black text-white py-3"
-              >
-                {submitting ? "Processing…" : "Pay with PayFast"}
+              <button disabled={submitting} className="w-full bg-black text-white py-3 rounded-2xl">
+                Pay with PayFast
               </button>
             </form>
           ) : (
@@ -193,11 +147,12 @@ export default function CheckoutPage() {
               disabled={submitting}
               onClick={async () => {
                 const ok = await createOrder();
-                if (ok) router.push("/cart/shipping/checkout/eft-confirmation");
+                if (ok)
+                  router.push(`/cart/shipping/checkout/eft-confirmation?order=${orderNumber}`);
               }}
-              className="w-full rounded-2xl border py-3 mt-6"
+              className="w-full border py-3 mt-6 rounded-2xl"
             >
-              {submitting ? "Saving…" : "Place EFT Order"}
+              Place EFT Order
             </button>
           )}
         </div>
