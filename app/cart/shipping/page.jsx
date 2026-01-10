@@ -45,7 +45,15 @@ export default function ShippingPage() {
     }
   }, [user, loading, cart, router]);
 
-  if (loading || !user) return null;
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="opacity-70">Loading shipping details…</p>
+      </div>
+    );
+  }
+
+  if (!user) return null;
 
   /* ================================
      📝 FORM HANDLING
@@ -76,23 +84,21 @@ export default function ShippingPage() {
     setSubmitting(true);
 
     try {
-      // NOTE: For now we reuse the latest address.
-      // Later this should support multiple saved addresses.
+      // Fetch latest address safely
       const { data: existing } = await supabase
         .from("shipping_addresses")
         .select("id")
         .eq("user_id", user.id)
         .order("created_at", { ascending: false })
-        .limit(1)
-        .single();
+        .limit(1);
 
       let address;
 
-      if (existing) {
+      if (existing && existing.length > 0) {
         const { data, error } = await supabase
           .from("shipping_addresses")
           .update(form)
-          .eq("id", existing.id)
+          .eq("id", existing[0].id)
           .select()
           .single();
 
@@ -112,22 +118,18 @@ export default function ShippingPage() {
         address = data;
       }
 
-      setShippingAddressId(address.id);
+      const shippingCost = method === "courier" ? 150 : 0;
 
-      if (method === "courier") {
-        setShippingMethod("courier");
-        setShippingCost(150);
-      } else {
-        setShippingMethod("free");
-        setShippingCost(0);
-      }
+      setShippingAddressId(address.id);
+      setShippingMethod(method);
+      setShippingCost(shippingCost);
 
       localStorage.setItem(
         "hellobumbleShipping",
         JSON.stringify({
           addressId: address.id,
           method,
-          cost: method === "courier" ? 150 : 0,
+          cost: shippingCost,
         })
       );
 
@@ -135,7 +137,7 @@ export default function ShippingPage() {
     } catch (err) {
       console.error(err);
       alert("Something went wrong saving your shipping details.");
-      setSubmitting(false); // ✅ FIX
+      setSubmitting(false);
     }
   };
 
@@ -180,7 +182,11 @@ export default function ShippingPage() {
           <input name="country" value={form.country} onChange={handleChange} className="input" />
         </div>
 
-        <button onClick={handleSubmit} disabled={submitting} className="btn-cart w-full">
+        <button
+          onClick={handleSubmit}
+          disabled={submitting}
+          className="btn-cart w-full"
+        >
           {submitting ? "Saving…" : "Continue to Checkout →"}
         </button>
       </div>
