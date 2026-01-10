@@ -57,8 +57,6 @@ export default function CheckoutPage() {
 
   /* ================================
      💰 TOTALS (DISPLAY ONLY)
-     (authoritative totals calculated
-      again on server)
   ================================= */
   const subtotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -81,6 +79,7 @@ export default function CheckoutPage() {
         shippingAddressId: shipping.addressId,
         cart,
         shippingCost: shipping.cost,
+        paymentMethod, // ✅ EFT / PAYFAST SAVED
       }),
     });
 
@@ -91,7 +90,7 @@ export default function CheckoutPage() {
 
     const data = await res.json();
 
-    // Persist order for confirmation / payment steps
+    // Persist order for payment / confirmation pages
     sessionStorage.setItem(
       "hellobumbleOrder",
       JSON.stringify(data)
