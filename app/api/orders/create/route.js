@@ -10,17 +10,37 @@ const supabase = createClient(
 export async function POST(req) {
   try {
     const body = await req.json();
-    const { userId, shippingAddressId, cart, shippingCost } = body;
+    const {
+      userId,
+      shippingAddressId,
+      cart,
+      shippingCost,
+      paymentMethod, // "eft" | "payfast"
+    } = body;
 
     // 🛑 Basic validation
-    if (!userId || !shippingAddressId || !Array.isArray(cart) || cart.length === 0) {
+    if (
+      !userId ||
+      !shippingAddressId ||
+      !Array.isArray(cart) ||
+      cart.length === 0
+    ) {
       return NextResponse.json(
         { error: "Invalid order payload" },
         { status: 400 }
       );
     }
 
-    // 💰 Calculate totals server-side (DO NOT TRUST CLIENT)
+    // 🛑 Validate shipping cost
+    const allowedShippingCosts = [0, 150];
+    if (!allowedShippingCosts.includes(shippingCost)) {
+      return NextResponse.json(
+        { error: "Invalid shipping cost" },
+        { status: 400 }
+      );
+    }
+
+    // 💰 Calculate totals server-side
     const subtotal = cart.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
@@ -28,8 +48,10 @@ export async function POST(req) {
 
     const total = subtotal + shippingCost;
 
-    // 🧾 Generate order number
-    const orderNumber = `HB-${Date.now()}`;
+    // 🧾 Generate hardened order number
+    const orderNumber = `HB-${Date.now()}-${Math.floor(
+      Math.random() * 1000
+    )}`;
 
     // 🧱 1️⃣ Create order
     const { data: order, error: orderError } = await supabase
@@ -40,7 +62,8 @@ export async function POST(req) {
         subtotal,
         shipping_cost: shippingCost,
         total,
-        status: "pending",
+        status: "pending_payment",
+        payment_method: paymentMethod ?? "eft",
         order_number: orderNumber,
       })
       .select()
@@ -69,7 +92,6 @@ export async function POST(req) {
       orderId: order.id,
       orderNumber,
     });
-
   } catch (err) {
     console.error("Order creation failed:", err);
     return NextResponse.json(
