@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { supabase } from "@/app/lib/supabaseClient";
 import { useAuth } from "@/app/context/AuthContext";
 import { useCart } from "@/app/context/CartContext";
 
@@ -25,28 +24,36 @@ export default function CheckoutPage() {
       return;
     }
 
-    const savedShipping = localStorage.getItem("hellobumbleShipping");
-
-    if (!savedShipping || cart.length === 0) {
+    if (cart.length === 0) {
       router.replace("/cart");
       return;
     }
 
-    const parsed = JSON.parse(savedShipping);
-    setShipping(parsed);
+    const savedShipping = localStorage.getItem("hellobumbleShipping");
 
-    supabase
-      .from("shipping_addresses")
-      .select("*")
-      .eq("id", parsed.addressId)
-      .single()
-      .then(({ data }) => {
-        if (!data) router.replace("/cart/shipping");
-        else setAddress(data);
-      });
+    if (!savedShipping) {
+      router.replace("/cart/shipping");
+      return;
+    }
+
+    const parsed = JSON.parse(savedShipping);
+
+    if (!parsed.addressSnapshot || parsed.cost === undefined) {
+      router.replace("/cart/shipping");
+      return;
+    }
+
+    setShipping(parsed);
+    setAddress(parsed.addressSnapshot);
   }, [user, loading, cart, router]);
 
-  if (loading || !shipping || !address) return null;
+  if (loading || !shipping || !address) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <p className="opacity-70">Preparing checkout…</p>
+      </div>
+    );
+  }
 
   /* ================================
      💰 TOTALS (DISPLAY ONLY)
@@ -84,7 +91,7 @@ export default function CheckoutPage() {
 
     const data = await res.json();
 
-    // Persist for payment / confirmation steps
+    // Persist order for confirmation / payment steps
     sessionStorage.setItem(
       "hellobumbleOrder",
       JSON.stringify(data)
@@ -110,8 +117,17 @@ export default function CheckoutPage() {
           <p>{address.full_name}</p>
           <p>{address.phone}</p>
           <p>{address.address_line1}</p>
+          {address.address_line2 && <p>{address.address_line2}</p>}
           <p>
-            {address.city}, {address.province}
+            {address.city}, {address.province}, {address.postal_code}
+          </p>
+          <p>{address.country}</p>
+
+          <p className="mt-4 font-medium">
+            Delivery method:{" "}
+            {shipping.method === "courier"
+              ? "Courier Guy (R150)"
+              : "Own courier pickup"}
           </p>
 
           {/* 💳 Payment method */}
@@ -175,7 +191,7 @@ export default function CheckoutPage() {
                   const { orderNumber } = await createOrder();
                   e.target.m_payment_id.value = orderNumber;
                   e.target.submit();
-                } catch (err) {
+                } catch {
                   alert("Unable to place order. Please try again.");
                 }
               }}
@@ -204,7 +220,7 @@ export default function CheckoutPage() {
                   router.push(
                     `/cart/shipping/checkout/eft-confirmation?order=${orderNumber}`
                   );
-                } catch (err) {
+                } catch {
                   alert("Unable to place order. Please try again.");
                 }
               }}
