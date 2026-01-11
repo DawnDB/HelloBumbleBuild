@@ -33,7 +33,8 @@ export default function RootLayout({ children }) {
     >
       <body className="min-h-screen bg-[url('/pastel-marble.jpg')] bg-cover bg-center text-neutral-blackText font-description">
         <AuthProvider>
-          <ClientShell>{children}</ClientShell>
+          <CartProvider>
+            <ClientShell>{children}</ClientShell>
           </CartProvider>
         </AuthProvider>
       </body>
