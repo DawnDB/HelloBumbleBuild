@@ -8,7 +8,7 @@ export default function PayFastCancelledPage() {
   return (
     <div className="max-w-3xl mx-auto px-6 py-20 text-center">
       <h1 className="text-3xl font-hellobumble mb-4">
-        Payment Cancelled
+        Payment not completed
       </h1>
 
       <p className="mb-6">
@@ -17,10 +17,10 @@ export default function PayFastCancelledPage() {
 
       <div className="bg-white/70 rounded-2xl p-6 shadow text-left space-y-3">
         <p>
-          You can try again or choose EFT as a payment option at checkout.
+          You can return to checkout to try again or choose Manual EFT instead.
         </p>
         <p>
-          If you experienced an issue, please contact{" "}
+          If something didn’t work as expected, please contact{" "}
           <strong>dawn@hellobumble.co.za</strong>.
         </p>
       </div>
@@ -30,7 +30,7 @@ export default function PayFastCancelledPage() {
           onClick={() => router.push("/cart/shipping/checkout")}
           className="btn-cart w-full"
         >
-          Try Again
+          Return to Checkout
         </button>
 
         <button
