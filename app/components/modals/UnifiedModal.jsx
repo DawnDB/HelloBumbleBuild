@@ -68,28 +68,47 @@ export default function UnifiedModal({
         {/* Form */}
         {!success ? (
           <form onSubmit={handleSubmit} className="space-y-4">
-            {config.fields.map((field) => (
-              <div key={field.name}>
-                {field.type !== "textarea" ? (
+
+            {config.fields.map((field) => {
+              // 🐝 Honeypot field (hidden from humans)
+              if (field.honeypot) {
+                return (
                   <input
-                    type={field.type}
+                    key={field.name}
+                    type="text"
                     name={field.name}
-                    required={field.required}
-                    placeholder={field.label}
+                    tabIndex="-1"
+                    autoComplete="off"
+                    className="hidden"
                     onChange={handleChange}
-                    className="input w-full"
                   />
-                ) : (
-                  <textarea
-                    name={field.name}
-                    required={field.required}
-                    placeholder={field.label}
-                    onChange={handleChange}
-                    className="input w-full h-24"
-                  />
-                )}
-              </div>
-            ))}
+                );
+              }
+
+              // Normal fields
+              return (
+                <div key={field.name}>
+                  {field.type !== "textarea" ? (
+                    <input
+                      type={field.type}
+                      name={field.name}
+                      required={field.required}
+                      placeholder={field.label}
+                      onChange={handleChange}
+                      className="input w-full"
+                    />
+                  ) : (
+                    <textarea
+                      name={field.name}
+                      required={field.required}
+                      placeholder={field.label}
+                      onChange={handleChange}
+                      className="input w-full h-24"
+                    />
+                  )}
+                </div>
+              );
+            })}
 
             <button
               type="submit"
