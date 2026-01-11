@@ -1,39 +1,108 @@
 "use client";
 
-import { useEffect } from "react";
+import { useState } from "react";
 
-export default function UnifiedModal({ show, onClose, children, successMessage }) {
-  // Auto-close the modal if there's a success message
-  useEffect(() => {
-    if (successMessage) {
-      const timer = setTimeout(() => {
+export default function UnifiedModal({
+  isOpen,
+  modalKey,
+  config,
+  onClose,
+}) {
+  const [formData, setFormData] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  if (!isOpen || !config) return null;
+
+  const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+
+    try {
+      const res = await fetch(config.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (!res.ok) throw new Error("Submission failed");
+
+      setSuccess(true);
+
+      // Auto-close after success
+      setTimeout(() => {
+        setSuccess(false);
+        setFormData({});
         onClose();
-      }, 3000); // closes after 3 seconds
-      return () => clearTimeout(timer);
+      }, 2500);
+    } catch (err) {
+      alert("Something went wrong. Please try again.");
+      setSubmitting(false);
     }
-  }, [successMessage, onClose]);
-
-  if (!show) return null;
+  };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white/20 backdrop-blur-md rounded-2xl shadow-lg p-6 w-full max-w-md relative">
-        {/* Close button */}
+      <div className="bg-white/70 rounded-2xl shadow-soft p-6 w-full max-w-md relative">
+
+        {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-3 right-3 text-black hover:text-gray-700"
+          className="absolute top-3 right-3 text-xl"
         >
           ✕
         </button>
 
-        {/* Modal content */}
-        {children}
+        {/* Title */}
+        <h2 className="text-2xl font-semibold mb-4 text-center">
+          {config.title}
+        </h2>
 
-        {/* Success message */}
-        {successMessage && (
-          <div className="mt-4 text-black text-center font-semibold">
-            {successMessage} 💛🐝
-          </div>
+        {/* Form */}
+        {!success ? (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {config.fields.map((field) => (
+              <div key={field.name}>
+                {field.type !== "textarea" ? (
+                  <input
+                    type={field.type}
+                    name={field.name}
+                    required={field.required}
+                    placeholder={field.label}
+                    onChange={handleChange}
+                    className="input w-full"
+                  />
+                ) : (
+                  <textarea
+                    name={field.name}
+                    required={field.required}
+                    placeholder={field.label}
+                    onChange={handleChange}
+                    className="input w-full h-24"
+                  />
+                )}
+              </div>
+            ))}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="btn-primary w-full"
+            >
+              {submitting ? "Sending…" : "Submit"}
+            </button>
+          </form>
+        ) : (
+          <p className="text-center font-semibold text-neutral-blackText">
+            {config.successMessage} 💛🐝
+          </p>
         )}
       </div>
     </div>
