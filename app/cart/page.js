@@ -5,11 +5,7 @@ import Image from "next/image";
 import { useCart } from "@/app/context/CartContext";
 
 export default function CartPage() {
-  const {
-    cart,
-    updateQuantity,
-    removeFromCart,
-  } = useCart();
+  const { cart, updateQuantity, removeFromCart } = useCart();
 
   const cartTotal = cart.reduce(
     (sum, item) => sum + item.price * item.quantity,
@@ -25,17 +21,28 @@ export default function CartPage() {
         </h1>
 
         {cart.length === 0 ? (
-          <p className="text-center">Your cart is empty.</p>
+          <div className="text-center space-y-6">
+            <p>Your cart is empty.</p>
+
+            <Link
+              href="/shop"
+              className="btn-primary inline-block"
+            >
+              Browse products
+            </Link>
+          </div>
         ) : (
           <div className="flex flex-col gap-6">
+
             {cart.map((item) => (
               <div
                 key={item.cartKey}
                 className="flex flex-col sm:flex-row gap-6 bg-white/60 p-5 rounded-2xl"
               >
-                <div className="w-28 h-28 rounded-xl overflow-hidden">
+                {/* Image */}
+                <div className="w-28 h-28 rounded-xl overflow-hidden flex-shrink-0">
                   <Image
-                    src={item.image}
+                    src={item.image || "/placeholder.jpg"}
                     alt={item.name}
                     width={120}
                     height={120}
@@ -43,6 +50,7 @@ export default function CartPage() {
                   />
                 </div>
 
+                {/* Info */}
                 <div className="flex-1">
                   <h2 className="font-product text-xl">
                     {item.name}
@@ -60,12 +68,18 @@ export default function CartPage() {
                   </p>
                 </div>
 
+                {/* Quantity */}
                 <div className="flex items-center gap-3">
                   <button
                     onClick={() =>
                       updateQuantity(item.cartKey, item.quantity - 1)
                     }
                     disabled={item.quantity === 1}
+                    className={`px-2 ${
+                      item.quantity === 1
+                        ? "opacity-40 cursor-not-allowed"
+                        : ""
+                    }`}
                   >
                     –
                   </button>
@@ -76,21 +90,23 @@ export default function CartPage() {
                     onClick={() =>
                       updateQuantity(item.cartKey, item.quantity + 1)
                     }
+                    className="px-2"
                   >
                     +
                   </button>
                 </div>
 
+                {/* Remove */}
                 <button
                   onClick={() => removeFromCart(item.cartKey)}
-                  className="underline text-red-500"
+                  className="underline text-red-500 text-sm self-start sm:self-center"
                 >
                   Remove
                 </button>
               </div>
             ))}
 
-            {/* Cart summary */}
+            {/* Summary */}
             <div className="bg-white/60 p-6 rounded-2xl flex flex-col gap-4">
               <p className="text-xl text-center">
                 Cart Total: <strong>R{cartTotal}</strong>
@@ -103,6 +119,7 @@ export default function CartPage() {
                 Continue to Shipping →
               </Link>
             </div>
+
           </div>
         )}
       </div>
