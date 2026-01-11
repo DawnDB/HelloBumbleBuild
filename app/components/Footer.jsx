@@ -98,7 +98,7 @@ export default function Footer({ onOpenNewsletter, onOpenContact }) {
           {/* Branding */}
           <div className="text-center space-y-4">
             <Image
-              src="/hellobumble logo.jpg"
+              src="/hellobumble-logo.jpg"
               alt="HelloBumble logo"
               width={120}
               height={120}
