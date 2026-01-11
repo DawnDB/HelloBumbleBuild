@@ -58,9 +58,11 @@ export default function EFTConfirmationPage() {
         <p><strong>Order reference:</strong> {orderNumber}</p>
         <p><strong>Bank:</strong> FNB</p>
         <p><strong>Account Name:</strong> HelloBumble</p>
-        <p><strong>Account Number:</strong> XXXXXXXX</p>
         <p><strong>Branch Code:</strong> 250655</p>
         <p><strong>Payment Reference:</strong> {orderNumber}</p>
+        <p className="text-sm opacity-80">
+          Full banking details will be included in your order confirmation email.
+        </p>
         <p>
           Please email your proof of payment to{" "}
           <strong>dawn@hellobumble.co.za</strong>
@@ -68,7 +70,7 @@ export default function EFTConfirmationPage() {
       </div>
 
       <p className="mt-6 text-sm opacity-70">
-        Orders will be processed once payment has cleared.
+        Orders are processed once payment has cleared.
       </p>
 
       {/* 🔁 ACTIONS */}
