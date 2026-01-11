@@ -196,11 +196,26 @@ export default function CheckoutPage() {
               }}
               className="mt-6"
             >
+              {/* 🔐 PayFast required fields */}
               <input type="hidden" name="m_payment_id" />
+
               <input
                 type="hidden"
                 name="custom_str1"
                 value={JSON.stringify({ cart, shipping, total })}
+              />
+
+              {/* ✅ RETURN / CANCEL URLS */}
+              <input
+                type="hidden"
+                name="return_url"
+                value="https://www.hellobumble.co.za/cart/shipping/checkout/success"
+              />
+
+              <input
+                type="hidden"
+                name="cancel_url"
+                value="https://www.hellobumble.co.za/cart/shipping/checkout/cancelled"
               />
 
               <button
