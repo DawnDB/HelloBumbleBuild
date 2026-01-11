@@ -24,13 +24,12 @@ export default function CheckoutPage() {
       return;
     }
 
-    if (cart.length === 0) {
+    if (!loading && cart.length === 0) {
       router.replace("/cart");
       return;
     }
 
     const savedShipping = localStorage.getItem("hellobumbleShipping");
-
     if (!savedShipping) {
       router.replace("/cart/shipping");
       return;
@@ -38,7 +37,11 @@ export default function CheckoutPage() {
 
     const parsed = JSON.parse(savedShipping);
 
-    if (!parsed.addressSnapshot || parsed.cost === undefined) {
+    if (
+      !parsed.addressId ||
+      !parsed.addressSnapshot ||
+      parsed.cost === undefined
+    ) {
       router.replace("/cart/shipping");
       return;
     }
@@ -76,10 +79,10 @@ export default function CheckoutPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: user.id,
-        shippingAddressId: shipping.addressId,
+        shippingAddressId: shipping.addressId, // ✅ FIXED
         cart,
         shippingCost: shipping.cost,
-        paymentMethod, // ✅ EFT / PAYFAST SAVED
+        paymentMethod,
       }),
     });
 
@@ -90,7 +93,6 @@ export default function CheckoutPage() {
 
     const data = await res.json();
 
-    // Persist order for payment / confirmation pages
     sessionStorage.setItem(
       "hellobumbleOrder",
       JSON.stringify(data)
@@ -154,7 +156,7 @@ export default function CheckoutPage() {
         {/* 🧾 Order summary */}
         <div className="bg-white/70 rounded-2xl p-6 shadow">
           {cart.map((item) => (
-            <div key={item.slug} className="flex justify-between mb-2">
+            <div key={item.cartKey} className="flex justify-between mb-2">
               <span>
                 {item.name} × {item.quantity}
               </span>
@@ -196,7 +198,6 @@ export default function CheckoutPage() {
               }}
               className="mt-6"
             >
-              {/* 🔐 PayFast required fields */}
               <input type="hidden" name="m_payment_id" />
 
               <input
@@ -205,7 +206,6 @@ export default function CheckoutPage() {
                 value={JSON.stringify({ cart, shipping, total })}
               />
 
-              {/* ✅ RETURN / CANCEL URLS */}
               <input
                 type="hidden"
                 name="return_url"
