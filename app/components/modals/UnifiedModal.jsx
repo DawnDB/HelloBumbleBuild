@@ -1,129 +1,80 @@
-"use client";
+export const modalConfigs = {
+  contact: {
+    title: "Contact Us",
+    subject: "Contact Inquiry",
+    endpoint: "/api/contact",
+    successMessage: "Message sent successfully!",
+    fields: [
+      { name: "company" }, // 🐝 honeypot (ALWAYS FIRST)
+      { name: "name", label: "Your Name", type: "text", required: true },
+      { name: "email", label: "Your Email", type: "email", required: true },
+      { name: "message", label: "Your Message", type: "textarea", required: true },
+    ],
+  },
 
-import { useState } from "react";
+  ambuzzador: {
+    title: "AmbuZZador Application",
+    subject: "AmbuZZador Application",
+    endpoint: "/api/ambuzzador",
+    successMessage: "Application sent successfully!",
+    fields: [
+      { name: "company" }, // 🐝 honeypot
+      { name: "name", label: "Your Name", type: "text", required: true },
+      { name: "email", label: "Your Email", type: "email", required: true },
+      { name: "social", label: "Social Media Handle", type: "text" },
+      {
+        name: "message",
+        label: "Why do you want to be an AmbuZZador?",
+        type: "textarea",
+      },
+    ],
+  },
 
-export default function UnifiedModal({
-  isOpen,
-  modalKey,
-  config,
-  onClose,
-}) {
-  const [formData, setFormData] = useState({});
-  const [submitting, setSubmitting] = useState(false);
-  const [success, setSuccess] = useState(false);
+  newsletter: {
+    title: "Join the BuZZ Letter",
+    subject: "Newsletter Subscription",
+    endpoint: "/api/newsletter",
+    successMessage: "You’re officially part of the BuZZ!",
+    fields: [
+      { name: "company" }, // 🐝 honeypot
+      { name: "email", label: "Your Email", type: "email", required: true },
+    ],
+  },
 
-  if (!isOpen || !config) return null;
+  donate: {
+    title: "Donate to Help-a-Mama",
+    subject: "Help-a-Mama Donation Offer",
+    endpoint: "/api/donate",
+    successMessage: "Thank you so much for your generosity!",
+    fields: [
+      { name: "company" }, // 🐝 honeypot
+      { name: "name", label: "Your Name", type: "text", required: true },
+      { name: "contact", label: "Phone or Email", type: "text", required: true },
+      {
+        name: "donationType",
+        label: "What would you like to donate?",
+        type: "text",
+        required: true,
+      },
+      { name: "message", label: "Additional notes", type: "textarea" },
+    ],
+  },
 
-  const handleChange = (e) => {
-    setFormData((prev) => ({
-      ...prev,
-      [e.target.name]: e.target.value,
-    }));
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-
-    try {
-      const res = await fetch(config.endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!res.ok) throw new Error("Submission failed");
-
-      setSuccess(true);
-
-      // Auto-close after success
-      setTimeout(() => {
-        setSuccess(false);
-        setFormData({});
-        onClose();
-      }, 2500);
-    } catch (err) {
-      alert("Something went wrong. Please try again.");
-      setSubmitting(false);
-    }
-  };
-
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-      <div className="bg-white/70 rounded-2xl shadow-soft p-6 w-full max-w-md relative">
-
-        {/* Close */}
-        <button
-          onClick={onClose}
-          className="absolute top-3 right-3 text-xl"
-        >
-          ✕
-        </button>
-
-        {/* Title */}
-        <h2 className="text-2xl font-semibold mb-4 text-center">
-          {config.title}
-        </h2>
-
-        {/* Form */}
-        {!success ? (
-          <form onSubmit={handleSubmit} className="space-y-4">
-
-            {config.fields.map((field) => {
-              // 🐝 Honeypot field (hidden from humans)
-              if (field.honeypot) {
-                return (
-                  <input
-                    key={field.name}
-                    type="text"
-                    name={field.name}
-                    tabIndex="-1"
-                    autoComplete="off"
-                    className="hidden"
-                    onChange={handleChange}
-                  />
-                );
-              }
-
-              // Normal fields
-              return (
-                <div key={field.name}>
-                  {field.type !== "textarea" ? (
-                    <input
-                      type={field.type}
-                      name={field.name}
-                      required={field.required}
-                      placeholder={field.label}
-                      onChange={handleChange}
-                      className="input w-full"
-                    />
-                  ) : (
-                    <textarea
-                      name={field.name}
-                      required={field.required}
-                      placeholder={field.label}
-                      onChange={handleChange}
-                      className="input w-full h-24"
-                    />
-                  )}
-                </div>
-              );
-            })}
-
-            <button
-              type="submit"
-              disabled={submitting}
-              className="btn-primary w-full"
-            >
-              {submitting ? "Sending…" : "Submit"}
-            </button>
-          </form>
-        ) : (
-          <p className="text-center font-semibold text-neutral-blackText">
-            {config.successMessage} 💛🐝
-          </p>
-        )}
-      </div>
-    </div>
-  );
-}
+  needHelp: {
+    title: "Help-a-Mama Request",
+    subject: "Help-a-Mama Request",
+    endpoint: "/api/needhelp",
+    successMessage: "Your request has been sent!",
+    fields: [
+      { name: "company" }, // 🐝 honeypot
+      { name: "name", label: "Your Name", type: "text", required: true },
+      { name: "babyAge", label: "Baby Age", type: "text" },
+      { name: "babyWeight", label: "Baby Weight", type: "text" },
+      {
+        name: "situation",
+        label: "Tell us about your situation",
+        type: "textarea",
+      },
+    ],
+  },
+};
