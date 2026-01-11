@@ -7,14 +7,13 @@ import {
   FaTimes,
   FaUser,
   FaShoppingCart,
-  FaSignOutAlt,
 } from "react-icons/fa";
 import MobileMenu from "./MobileMenu";
 import { useAuth } from "@/app/context/AuthContext";
 
 export default function Header() {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user } = useAuth();
 
   return (
     <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/30 shadow-soft">
@@ -52,8 +51,8 @@ export default function Header() {
         {/* Right desktop icons */}
         <div className="hidden md:flex items-center gap-5 text-xl">
 
-          {/* Auth-aware profile/login */}
-          {!user ? (
+          {/* Login icon only (no profile before launch) */}
+          {!user && (
             <Link
               href="/login"
               aria-label="Login"
@@ -61,24 +60,6 @@ export default function Header() {
             >
               <FaUser />
             </Link>
-          ) : (
-            <>
-              <Link
-                href="/profile"
-                aria-label="My Account"
-                className="hover:text-neutral-palePurpleClickable transition"
-              >
-                <FaUser />
-              </Link>
-
-              <button
-                onClick={signOut}
-                aria-label="Logout"
-                className="hover:text-neutral-palePurpleClickable transition"
-              >
-                <FaSignOutAlt />
-              </button>
-            </>
           )}
 
           {/* Cart */}
@@ -113,7 +94,6 @@ export default function Header() {
             <MobileMenu
               closeMenu={() => setMobileOpen(false)}
               user={user}
-              onLogout={signOut}
             />
           </div>
         </div>
