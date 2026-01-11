@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
+import { sendEmail } from "@/app/lib/email";
+import {
+  customerOrderEmail,
+  adminOrderEmail,
+} from "@/app/lib/emailTemplates";
 
 // 🔐 Server-side Supabase (service role)
 const supabase = createClient(
@@ -16,6 +21,7 @@ export async function POST(req) {
       cart,
       shippingCost,
       paymentMethod, // "eft" | "payfast"
+      email, // optional (if you add it later)
     } = body;
 
     // 🛑 Basic validation
@@ -86,6 +92,36 @@ export async function POST(req) {
       .insert(items);
 
     if (itemsError) throw itemsError;
+
+    /* ================================
+       📩 SEND ORDER EMAILS
+       (non-blocking safety)
+    ================================= */
+    try {
+      // Customer email
+      await sendEmail({
+        to: email || process.env.EMAIL_USER, // fallback safe
+        subject: `Your HelloBumble order ${orderNumber}`,
+        html: customerOrderEmail({
+          orderNumber,
+          paymentMethod,
+        }),
+      });
+
+      // Admin email (Dawn)
+      await sendEmail({
+        to: process.env.EMAIL_USER,
+        subject: `New order received: ${orderNumber}`,
+        html: adminOrderEmail({
+          orderNumber,
+          total,
+          paymentMethod,
+        }),
+      });
+    } catch (emailErr) {
+      console.error("Order email failed:", emailErr);
+      // ❗ Do NOT fail the order if email fails
+    }
 
     // ✅ Success
     return NextResponse.json({
