@@ -84,7 +84,7 @@ export default function ShippingPage() {
     setSubmitting(true);
 
     try {
-      // Fetch latest address safely
+      // Get latest address for this user (safe update)
       const { data: existing } = await supabase
         .from("shipping_addresses")
         .select("id")
@@ -120,16 +120,19 @@ export default function ShippingPage() {
 
       const shippingCost = method === "courier" ? 150 : 0;
 
+      // Persist to context
       setShippingAddressId(address.id);
       setShippingMethod(method);
       setShippingCost(shippingCost);
 
+      // Persist snapshot for checkout (authoritative)
       localStorage.setItem(
         "hellobumbleShipping",
         JSON.stringify({
           addressId: address.id,
           method,
           cost: shippingCost,
+          addressSnapshot: form,
         })
       );
 
@@ -149,6 +152,7 @@ export default function ShippingPage() {
           Shipping Details
         </h1>
 
+        {/* Delivery method */}
         <div className="space-y-3">
           <p className="font-description font-semibold">Delivery option</p>
 
@@ -171,6 +175,7 @@ export default function ShippingPage() {
           </label>
         </div>
 
+        {/* Address form */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <input name="full_name" placeholder="Full name *" value={form.full_name} onChange={handleChange} className="input" />
           <input name="phone" placeholder="Phone number *" value={form.phone} onChange={handleChange} className="input" />
