@@ -2,7 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 
-const CartContext = createContext();
+const CartContext = createContext(null);
 
 export function CartProvider({ children }) {
   const [cart, setCart] = useState([]);
@@ -14,12 +14,15 @@ export function CartProvider({ children }) {
 
   // Load cart
   useEffect(() => {
+    if (typeof window === "undefined") return;
     const stored = localStorage.getItem("hellobumbleCart");
     if (stored) setCart(JSON.parse(stored));
   }, []);
 
   // Save cart
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     localStorage.setItem("hellobumbleCart", JSON.stringify(cart));
 
     if (cart.length === 0) {
@@ -63,5 +66,9 @@ export function CartProvider({ children }) {
 }
 
 export function useCart() {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
+  return context;
 }
