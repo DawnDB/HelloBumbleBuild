@@ -20,7 +20,7 @@ export default function Home() {
       {/* --- ABOUT SECTION --- */}
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/about/hellobumble">
-          <h2 className="text-3xl font-description text-neutral-palePurpleClickable mb-2 cursor-pointer">
+          <h2 className="text-3xl font-description text-neutral-blackText mb-2 cursor-pointer">
             About HelloBumble
           </h2>
         </Link>
@@ -35,7 +35,7 @@ export default function Home() {
       {/* --- PRODUCTS & MATERIALS --- */}
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/about/pandm">
-          <h2 className="text-3xl font-description text-neutral-palePurpleClickable mb-2 cursor-pointer">
+          <h2 className="text-3xl font-description text-neutral-blackText mb-2 cursor-pointer">
             Our Products &amp; Materials
           </h2>
         </Link>
@@ -49,7 +49,7 @@ export default function Home() {
       {/* --- SHOP SECTION --- */}
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-6 mb-10 text-center">
         <Link href="/shop">
-          <h2 className="text-3xl font-description text-neutral-palePurpleClickable mb-4 cursor-pointer">
+          <h2 className="text-3xl font-description text-neutral-blackText mb-4 cursor-pointer">
             Shop HelloBumble
           </h2>
         </Link>
@@ -89,7 +89,7 @@ export default function Home() {
       {/* --- AMBUZZADOR --- */}
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-6 mb-16 text-center">
         <Link href="/ambuzzador">
-          <h2 className="text-3xl font-description text-neutral-palePurpleClickable mb-2 cursor-pointer">
+          <h2 className="text-3xl font-description text-neutral-blackText mb-2 cursor-pointer">
             AmbuZZador
           </h2>
         </Link>
