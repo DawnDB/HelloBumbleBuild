@@ -1,80 +1,130 @@
-export const modalConfigs = {
-  contact: {
-    title: "Contact Us",
-    subject: "Contact Inquiry",
-    endpoint: "/api/contact",
-    successMessage: "Message sent successfully!",
-    fields: [
-      { name: "company" }, // 🐝 honeypot (ALWAYS FIRST)
-      { name: "name", label: "Your Name", type: "text", required: true },
-      { name: "email", label: "Your Email", type: "email", required: true },
-      { name: "message", label: "Your Message", type: "textarea", required: true },
-    ],
-  },
+"use client";
 
-  ambuzzador: {
-    title: "AmbuZZador Application",
-    subject: "AmbuZZador Application",
-    endpoint: "/api/ambuzzador",
-    successMessage: "Application sent successfully!",
-    fields: [
-      { name: "company" }, // 🐝 honeypot
-      { name: "name", label: "Your Name", type: "text", required: true },
-      { name: "email", label: "Your Email", type: "email", required: true },
-      { name: "social", label: "Social Media Handle", type: "text" },
-      {
-        name: "message",
-        label: "Why do you want to be an AmbuZZador?",
-        type: "textarea",
-      },
-    ],
-  },
+import { useState } from "react";
+import { modalConfigs } from "./modalConfigs";
 
-  newsletter: {
-    title: "Join the BuZZ Letter",
-    subject: "Newsletter Subscription",
-    endpoint: "/api/newsletter",
-    successMessage: "You’re officially part of the BuZZ!",
-    fields: [
-      { name: "company" }, // 🐝 honeypot
-      { name: "email", label: "Your Email", type: "email", required: true },
-    ],
-  },
+export default function UnifiedModal({ activeModal, closeModal }) {
+  if (!activeModal) return null;
 
-  donate: {
-    title: "Donate to Help-a-Mama",
-    subject: "Help-a-Mama Donation Offer",
-    endpoint: "/api/donate",
-    successMessage: "Thank you so much for your generosity!",
-    fields: [
-      { name: "company" }, // 🐝 honeypot
-      { name: "name", label: "Your Name", type: "text", required: true },
-      { name: "contact", label: "Phone or Email", type: "text", required: true },
-      {
-        name: "donationType",
-        label: "What would you like to donate?",
-        type: "text",
-        required: true,
-      },
-      { name: "message", label: "Additional notes", type: "textarea" },
-    ],
-  },
+  const config = modalConfigs[activeModal];
+  if (!config) return null;
 
-  needHelp: {
-    title: "Help-a-Mama Request",
-    subject: "Help-a-Mama Request",
-    endpoint: "/api/needhelp",
-    successMessage: "Your request has been sent!",
-    fields: [
-      { name: "company" }, // 🐝 honeypot
-      { name: "name", label: "Your Name", type: "text", required: true },
-      { name: "babyAge", label: "Baby Age", type: "text" },
-      { name: "babyWeight", label: "Baby Weight", type: "text" },
-      {
-        name: "situation",
-        label: "Tell us about your situation",
-        type: "textarea",
-      },
-    ],
-  },
-};
+  const [formData, setFormData] = useState({});
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+
+  function handleChange(e) {
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value,
+    });
+  }
+
+  async function handleSubmit(e) {
+    e.preventDefault();
+
+    // 🐝 Honeypot spam protection
+    if (formData.company) return;
+
+    setSubmitting(true);
+
+    try {
+      const res = await fetch(config.endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          ...formData,
+          subject: config.subject,
+        }),
+      });
+
+      if (res.ok) {
+        setSuccess(true);
+        setTimeout(() => {
+          setSuccess(false);
+          closeModal();
+          setFormData({});
+        }, 2500);
+      }
+    } catch (err) {
+      console.error("Modal submit error:", err);
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl">
+        <h2 className="mb-4 text-center text-xl font-semibold">
+          {config.title}
+        </h2>
+
+        {success ? (
+          <p className="text-center text-green-600">
+            {config.successMessage}
+          </p>
+        ) : (
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {config.fields.map((field) => {
+              // 🐝 honeypot (hidden)
+              if (field.name === "company") {
+                return (
+                  <input
+                    key="company"
+                    type="text"
+                    name="company"
+                    value={formData.company || ""}
+                    onChange={handleChange}
+                    className="hidden"
+                    autoComplete="off"
+                  />
+                );
+              }
+
+              if (field.type === "textarea") {
+                return (
+                  <textarea
+                    key={field.name}
+                    name={field.name}
+                    placeholder={field.label}
+                    required={field.required}
+                    onChange={handleChange}
+                    className="w-full rounded border p-2"
+                  />
+                );
+              }
+
+              return (
+                <input
+                  key={field.name}
+                  type={field.type || "text"}
+                  name={field.name}
+                  placeholder={field.label}
+                  required={field.required}
+                  onChange={handleChange}
+                  className="w-full rounded border p-2"
+                />
+              );
+            })}
+
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full rounded bg-black px-4 py-2 text-white"
+            >
+              {submitting ? "Sending..." : "Submit"}
+            </button>
+          </form>
+        )}
+
+        <button
+          onClick={closeModal}
+          className="mt-4 w-full text-sm text-gray-500"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  );
+}
