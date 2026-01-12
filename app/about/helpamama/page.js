@@ -1,6 +1,6 @@
 "use client";
 
-import { useModal } from "@/app/components/modals/ModalContext";
+import { useModal } from "@/app/ClientShell";
 
 export default function HelpAMamaPage() {
   const { openModal } = useModal();
