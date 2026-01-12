@@ -1,47 +1,44 @@
+// app/api/payfast/notify/route.js
+
+import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
 export async function POST(req) {
-  const data = await req.formData();
+  try {
+    const data = await req.formData();
 
-  if (data.get("payment_status") !== "COMPLETE") {
-    return new Response("Ignored");
-  }
+    // Only process successful payments
+    if (data.get("payment_status") !== "COMPLETE") {
+      return NextResponse.json({ ignored: true });
+    }
 
-  const orderData = JSON.parse(data.get("custom_str1")); 
-  const orderNumber = data.get("m_payment_id");
+    const orderNumber = data.get("m_payment_id");
+    const orderDataRaw = data.get("custom_str1");
 
-  const transporter = nodemailer.createTransport({
-    host: "smtpout.secureserver.net",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "dawn@hellobumble.co.za",
+    if (!orderNumber || !orderDataRaw) {
+      return NextResponse.json(
+        { error: "Missing order data" },
+        { status: 400 }
+      );
+    }
 
-export async function POST(req) {
-  const data = await req.formData();
+    const orderData = JSON.parse(orderDataRaw);
 
-  if (data.get("payment_status") !== "COMPLETE") {
-    return new Response("Ignored");
-  }
+    const transporter = nodemailer.createTransport({
+      host: "smtpout.secureserver.net",
+      port: 465,
+      secure: true,
+      auth: {
+        user: "dawn@hellobumble.co.za",
+        pass: process.env.EMAIL_PASS,
+      },
+    });
 
-  const orderData = JSON.parse(data.get("custom_str1")); 
-  const orderNumber = data.get("m_payment_id");
-
-  const transporter = nodemailer.createTransport({
-    host: "smtpout.secureserver.net",
-    port: 465,
-    secure: true,
-    auth: {
-      user: "dawn@hellobumble.co.za",
-      pass: process.env.EMAIL_PASS,
-    },
-  });
-
-  await transporter.sendMail({
-    from: "HelloBumble <dawn@hellobumble.co.za>",
-    to: "dawn@hellobumble.co.za",
-    subject: `New Paid Order – ${orderNumber}`,
-    text: `
+    await transporter.sendMail({
+      from: "HelloBumble <dawn@hellobumble.co.za>",
+      to: "dawn@hellobumble.co.za",
+      subject: `New Paid Order – ${orderNumber}`,
+      text: `
 NEW PAID ORDER (PAYFAST)
 
 Order Number: ${orderNumber}
@@ -57,15 +54,24 @@ ${orderData.shipping.city}
 ${orderData.shipping.postal}
 
 Products:
-${orderData.cart.map(
-  (i) => `${i.name} × ${i.quantity} – R${i.price * i.quantity}`
-).join("\n")}
+${orderData.cart
+  .map(
+    (i) => `${i.name} × ${i.quantity} – R${i.price * i.quantity}`
+  )
+  .join("\n")}
 
 Total Paid: R${orderData.total}
 
 Payment Method: PayFast
 `,
-  });
+    });
 
-  return new Response("OK");
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("PayFast IPN error:", err);
+    return NextResponse.json(
+      { error: "Server error" },
+      { status: 500 }
+    );
+  }
 }
