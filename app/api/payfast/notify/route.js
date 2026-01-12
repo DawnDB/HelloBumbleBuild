@@ -15,8 +15,7 @@ export async function POST(req) {
     port: 465,
     secure: true,
     auth: {
-      user: "dawn@hellobumble.co.za",
-      import nodemailer from "nodemailer";
+      user: "dawn@hellobumble.co.za";
 
 export async function POST(req) {
   const data = await req.formData();
