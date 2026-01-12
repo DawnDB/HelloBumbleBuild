@@ -16,8 +16,14 @@ export default function Header() {
   const { user } = useAuth();
 
   return (
-    <header className="fixed top-0 left-0 w-full z-50 backdrop-blur-md bg-white/30 shadow-soft">
-      <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4">
+    <header
+      className={`fixed top-0 left-0 w-full z-50 shadow-soft transition-colors ${
+        mobileOpen
+          ? "bg-white"
+          : "bg-white/30 backdrop-blur-md"
+      }`}
+    >
+      <div className="max-w-5xl mx-auto flex items-center justify-between px-6 py-4 relative">
 
         {/* Left desktop links */}
         <div className="hidden md:flex items-center gap-6">
@@ -32,13 +38,21 @@ export default function Header() {
         {/* Brand */}
         <Link
           href="/about/hellobumble"
-          className="absolute left-1/2 -translate-x-1/2 text-4xl font-hellobumble hover:text-neutral-palePurpleClickable"
+          className="absolute left-1/2 -translate-x-1/2 text-4xl font-hellobumble hover:text-neutral-palePurpleClickable transition"
         >
           HelloBumble
         </Link>
 
-        {/* Mobile menu toggle */}
-        <div className="md:hidden">
+        {/* Mobile icons */}
+        <div className="md:hidden flex items-center gap-4">
+          <Link
+            href="/cart"
+            aria-label="Cart"
+            className="text-2xl"
+          >
+            <FaShoppingCart />
+          </Link>
+
           <button
             aria-label="Open menu"
             onClick={() => setMobileOpen(true)}
@@ -73,14 +87,17 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Mobile drawer */}
+      {/* Mobile menu overlay + drawer */}
       {mobileOpen && (
         <div className="fixed inset-0 z-50 flex">
+          {/* Soft white overlay */}
           <div
-            className="absolute inset-0 bg-black/40"
+            className="absolute inset-0 bg-white/20 backdrop-blur-sm"
             onClick={() => setMobileOpen(false)}
           />
-          <div className="ml-auto w-72 bg-white/90 backdrop-blur-md h-full p-6 flex flex-col">
+
+          {/* Drawer */}
+          <div className="ml-auto w-72 h-full bg-neutral-whiteOverlay backdrop-blur-md p-6 flex flex-col relative z-10">
             <div className="flex justify-end">
               <button
                 aria-label="Close menu"
