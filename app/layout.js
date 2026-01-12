@@ -5,17 +5,17 @@ import { AuthProvider } from "@/app/context/AuthContext";
 import { CartProvider } from "@/app/context/CartContext";
 
 const helloBumbleFont = localFont({
-  src: "/fonts/GreatVibes-Regular.ttf",
+  src: "../fonts/GreatVibes-Regular.ttf",
   variable: "--font-hellobumble",
 });
 
 const productFont = localFont({
-  src: "/fonts/IngridDarling-Regular.ttf",
+  src: "../fonts/IngridDarling-Regular.ttf",
   variable: "--font-product",
 });
 
 const descriptionFont = localFont({
-  src: "/fonts/ABeeZee-Regular.ttf",
+  src: "../fonts/ABeeZee-Regular.ttf",
   variable: "--font-description",
 });
 
