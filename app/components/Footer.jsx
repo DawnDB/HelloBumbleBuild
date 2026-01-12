@@ -11,10 +11,13 @@ import {
   FaTiktok,
   FaArrowUp,
 } from "react-icons/fa";
+import { useModal } from "@/app/components/modals/ModalContext";
 
 const WHATSAPP_INTL = "27749735861"; // +27 74 973 5861
 
-export default function Footer({ onOpenNewsletter, onOpenContact }) {
+export default function Footer() {
+  const { openModal } = useModal();
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
@@ -35,47 +38,33 @@ export default function Footer({ onOpenNewsletter, onOpenContact }) {
             Emails will be few and far in between to ensure we do not spam you.
           </p>
 
-          {onOpenNewsletter && (
-            <button
-              onClick={onOpenNewsletter}
-              className="btn-primary mx-auto"
-            >
-              Sign up
-            </button>
-          )}
+          <button
+            onClick={() => openModal("newsletter")}
+            className="btn-primary mx-auto"
+          >
+            Sign up
+          </button>
         </div>
 
         {/* Main grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
 
-          {/* Start text */}
+          {/* About us */}
           <div className="space-y-3">
             <h4 className="font-semibold text-lg">About us</h4>
             <ul className="space-y-1 text-sm">
+              <li><Link href="/about/hellobumble">HelloBumble</Link></li>
+              <li><Link href="/about/pandm">Products and Materials</Link></li>
+              <li><Link href="/ambuzzador">AmbuZZador</Link></li>
+              <li><Link href="/preloved">Pre-Loved</Link></li>
+              <li><Link href="/about/helpamama">Help-a-Mama</Link></li>
               <li>
-                <Link href="/about/hellobumble">HelloBumble</Link>
-              </li>
-              <li>
-                <Link href="/about/pandm">Products and Materials</Link>
-              </li>
-              <li>
-                <Link href="/ambuzzador">AmbuZZador</Link>
-              </li>
-              <li>
-                <Link href="/preloved">Pre-Loved</Link>
-              </li>
-              <li>
-                <Link href="/about/helpamama">Help-a-Mama</Link>
-              </li>
-              <li>
-                {onOpenContact && (
-                  <button
-                    onClick={onOpenContact}
-                    className="underline underline-offset-4"
-                  >
-                    Contact us
-                  </button>
-                )}
+                <button
+                  onClick={() => openModal("contact")}
+                  className="underline underline-offset-4"
+                >
+                  Contact us
+                </button>
               </li>
             </ul>
           </div>
@@ -112,36 +101,36 @@ export default function Footer({ onOpenNewsletter, onOpenContact }) {
             <div className="flex justify-center gap-5 text-2xl">
               <a
                 href={`https://wa.me/${WHATSAPP_INTL}`}
-                aria-label="WhatsApp"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="WhatsApp"
               >
                 <FaWhatsapp className="text-green-500" />
               </a>
 
               <a
                 href="https://www.facebook.com/share/1Bdn9cs6RX/"
-                aria-label="Facebook"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Facebook"
               >
                 <FaFacebook className="text-blue-600" />
               </a>
 
               <a
                 href="https://www.instagram.com/_hellobumble_?igsh=NmN5bGt6ODI5Y2wz"
-                aria-label="Instagram"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Instagram"
               >
                 <FaInstagram className="text-pink-500" />
               </a>
 
               <a
                 href="https://www.tiktok.com/@_hellobumble_?_r=1&_t=ZM-91qpeuJJyfL"
-                aria-label="TikTok"
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="TikTok"
               >
                 <FaTiktok />
               </a>
