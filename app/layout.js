@@ -1,6 +1,6 @@
 import "./globals.css";
 import ClientShell from "./ClientShell";
-import localFont from "next/public/font/local";
+import localFont from "next/font/local";
 import { AuthProvider } from "@/app/context/AuthContext";
 import { CartProvider } from "@/app/context/CartContext";
 
