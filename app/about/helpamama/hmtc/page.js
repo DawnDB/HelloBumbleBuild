@@ -1,4 +1,4 @@
-export function HMTCTerms() {
+export default function HMTCTerms() {
   return (
     <div className="min-h-screen px-6 py-20 flex flex-col items-center font-description">
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 text-center">
@@ -24,10 +24,7 @@ export function HMTCTerms() {
           inspection and receipt of the shipping cost statement.
         </p>
 
-        <a
-          href="/helpamama"
-          className="btn-primary mt-8 inline-block"
-        >
+        <a href="/helpamama" className="btn-primary mt-8 inline-block">
           Back to Help-a-Mama
         </a>
       </div>
