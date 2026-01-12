@@ -40,7 +40,7 @@ module.exports = {
       const buttons = {
         /* Base button style */
         ".btn": {
-          "@apply font-hand font-medium rounded-2xl py-2 px-4 transition-colors duration-200": {},
+          "@apply font-description font-medium rounded-2xl py-2 px-4 transition-colors duration-200": {},
         },
         /* Add-to-cart & shop buttons */
         ".btn-cart": {
