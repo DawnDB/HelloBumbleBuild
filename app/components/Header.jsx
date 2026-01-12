@@ -103,7 +103,7 @@ export default function Header() {
             onClick={() => setMobileOpen(false)}
           />
 
-          {/* Drawer (slides from LEFT to match menu position) */}
+          {/* Drawer (slidesfromLEFT to match menu position) */}
           <div className="w-72 h-full bg-neutral-whiteOverlay backdrop-blur-md p-6 flex flex-col relative z-10">
 
             <div className="flex justify-end">
