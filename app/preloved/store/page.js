@@ -91,9 +91,13 @@ export default function PreLovedStore() {
               </div>
 
               {/* Action */}
-              <button className="btn-cart mt-4 w-full">
-                Add to Cart
-              </button>
+              <button
+  className="btn-cart mt-4 w-full"
+  aria-label={`Add ${product.name} size ${product.size} to cart`}
+>
+  Add to Cart
+</button>
+
             </div>
           ))}
         </section>
