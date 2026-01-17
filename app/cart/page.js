@@ -7,10 +7,12 @@ import { useCart } from "@/app/context/CartContext";
 export default function CartPage() {
   const { cart, updateQuantity, removeFromCart } = useCart();
 
-  const cartTotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
+  const cartTotal = cart.length
+    ? cart.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      )
+    : 0;
 
   return (
     <div className="min-h-screen px-6 py-20 flex justify-center">
@@ -71,9 +73,14 @@ export default function CartPage() {
                 {/* Quantity */}
                 <div className="flex items-center gap-3">
                   <button
-                    onClick={() =>
-                      updateQuantity(item.cartKey, item.quantity - 1)
-                    }
+                    onClick={() => {
+                      if (item.quantity > 1) {
+                        updateQuantity(
+                          item.cartKey,
+                          item.quantity - 1
+                        );
+                      }
+                    }}
                     disabled={item.quantity === 1}
                     className={`px-2 ${
                       item.quantity === 1
@@ -88,7 +95,10 @@ export default function CartPage() {
 
                   <button
                     onClick={() =>
-                      updateQuantity(item.cartKey, item.quantity + 1)
+                      updateQuantity(
+                        item.cartKey,
+                        item.quantity + 1
+                      )
                     }
                     className="px-2"
                   >
@@ -98,7 +108,9 @@ export default function CartPage() {
 
                 {/* Remove */}
                 <button
-                  onClick={() => removeFromCart(item.cartKey)}
+                  onClick={() =>
+                    removeFromCart(item.cartKey)
+                  }
                   className="underline text-red-500 text-sm self-start sm:self-center"
                 >
                   Remove
