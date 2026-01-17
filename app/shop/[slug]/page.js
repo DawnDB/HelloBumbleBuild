@@ -13,10 +13,12 @@ export default function ProductPage({ params }) {
 
   if (!product) return <p>Product not found</p>;
 
-  const unitPrice =
-    selectedSize && product.prices
-      ? product.prices[selectedSize]
-      : 0;
+  const unitPrice = product.prices
+  ? selectedSize
+    ? product.prices[selectedSize]
+    : 0
+  : product.price ?? 0;
+
 
   const handleAddToCart = () => {
     if (!selectedColor || !selectedSize) return;
