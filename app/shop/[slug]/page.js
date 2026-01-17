@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { products } from "../products";
+import { products } from "@/app/shop/products";
 
 export default function ProductPage({ params }) {
   const product = products.find((p) => p.slug === params.slug);
