@@ -8,8 +8,6 @@ export const modalConfigs = {
       { name: "name", label: "Your Name", type: "text", required: true },
       { name: "email", label: "Your Email", type: "email", required: true },
       { name: "message", label: "Your Message", type: "textarea", required: true },
-
-      // 🐝 Honeypot
       { name: "company", type: "text", honeypot: true },
     ],
   },
@@ -28,8 +26,6 @@ export const modalConfigs = {
         label: "Why do you want to be an AmbuZZador?",
         type: "textarea",
       },
-
-      // 🐝 Honeypot
       { name: "company", type: "text", honeypot: true },
     ],
   },
@@ -40,9 +36,8 @@ export const modalConfigs = {
     endpoint: "/api/newsletter",
     successMessage: "You’re officially part of the BuZZ!",
     fields: [
+      { name: "name", label: "Your Name", type: "text", required: true },
       { name: "email", label: "Your Email", type: "email", required: true },
-
-      // 🐝 Honeypot
       { name: "company", type: "text", honeypot: true },
     ],
   },
@@ -62,8 +57,6 @@ export const modalConfigs = {
         required: true,
       },
       { name: "message", label: "Additional notes", type: "textarea" },
-
-      // 🐝 Honeypot
       { name: "company", type: "text", honeypot: true },
     ],
   },
@@ -75,15 +68,15 @@ export const modalConfigs = {
     successMessage: "Your request has been sent!",
     fields: [
       { name: "name", label: "Your Name", type: "text", required: true },
+      { name: "contact", label: "Phone or Email", type: "text", required: true },
       { name: "babyAge", label: "Baby Age", type: "text" },
       { name: "babyWeight", label: "Baby Weight", type: "text" },
       {
         name: "situation",
         label: "Tell us about your situation",
         type: "textarea",
+        required: true,
       },
-
-      // 🐝 Honeypot
       { name: "company", type: "text", honeypot: true },
     ],
   },
