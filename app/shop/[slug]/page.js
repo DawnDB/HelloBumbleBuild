@@ -3,42 +3,62 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { products } from "@/app/shop/products";
+import { useCart } from "@/app/context/CartContext";
 
 export default function ProductPage({ params }) {
   const product = products.find((p) => p.slug === params.slug);
+  const { cart, updateQuantity } = useCart();
 
   const [selectedColor, setSelectedColor] = useState(null);
   const [selectedSize, setSelectedSize] = useState(null);
   const [quantity, setQuantity] = useState(1);
 
-  if (!product) return <p>Product not found</p>;
+  if (!product) {
+    return (
+      <div className="py-20 text-center">
+        <p>Product not found</p>
+      </div>
+    );
+  }
 
   /* ===============================
-     🔹 AUTO-SELECT SIZE IF NONE
+     🔹 AUTO-SELECT SIZE (SAFE)
   =============================== */
   useEffect(() => {
-    if (!product.sizes && selectedSize === null) {
-      setSelectedSize("One Size");
+    if (
+      Array.isArray(product.sizes) &&
+      product.sizes.length === 1 &&
+      !selectedSize
+    ) {
+      setSelectedSize(product.sizes[0]);
     }
   }, [product.sizes, selectedSize]);
 
   /* ===============================
      🔹 PRICE LOGIC (SAFE)
   =============================== */
-  const unitPrice = product.prices
-    ? selectedSize
+  const unitPrice =
+    selectedSize && product.prices?.[selectedSize]
       ? product.prices[selectedSize]
-      : 0
-    : product.price ?? 0;
+      : 0;
 
   /* ===============================
-     🔹 ADD TO CART
+     🔹 ADD TO CART (CONTEXT-SAFE)
   =============================== */
   const handleAddToCart = () => {
-    if (!selectedColor) return;
+    if (!selectedColor || !selectedSize || unitPrice === 0) return;
 
-    const cartItem = {
-      cartKey: `${product.slug}-${selectedColor.name}-${selectedSize}`,
+    const cartKey = `${product.slug}-${selectedColor.name}-${selectedSize}`;
+
+    const existingItem = cart.find((item) => item.cartKey === cartKey);
+
+    if (existingItem) {
+      updateQuantity(cartKey, existingItem.quantity + quantity);
+      return;
+    }
+
+    const newItem = {
+      cartKey,
       slug: product.slug,
       name: product.name,
       image: selectedColor.image,
@@ -48,37 +68,33 @@ export default function ProductPage({ params }) {
       quantity,
     };
 
-    const existing =
-      JSON.parse(localStorage.getItem("hellobumbleCart")) || [];
-
+    // add via context
+    updateQuantity(cartKey, quantity);
     localStorage.setItem(
       "hellobumbleCart",
-      JSON.stringify([...existing, cartItem])
+      JSON.stringify([...cart, newItem])
     );
   };
 
   return (
     <div className="px-6 py-20 max-w-4xl mx-auto">
-      {/* Image */}
       <Image
-        src={selectedColor?.image || product.colors?.[0]?.image}
+        src={selectedColor?.image || product.colors[0].image}
         alt={product.name}
         width={400}
         height={400}
         className="rounded-2xl mx-auto"
       />
 
-      {/* Name */}
       <h1 className="font-product text-3xl mt-6 text-center">
         {product.name}
       </h1>
 
-      {/* Description */}
       <p className="font-description text-center mt-2">
         {product.description}
       </p>
 
-      {/* Sizes (ONLY if they exist) */}
+      {/* Sizes */}
       {Array.isArray(product.sizes) && (
         <div className="flex gap-3 justify-center mt-6">
           {product.sizes.map((size) => (
@@ -87,7 +103,7 @@ export default function ProductPage({ params }) {
               onClick={() => setSelectedSize(size)}
               className={`px-4 py-2 rounded-xl ${
                 selectedSize === size
-                  ? "bg-purple-300"
+                  ? "bg-neutral-palePurpleClickable text-white"
                   : "bg-white/60"
               }`}
             >
@@ -105,7 +121,7 @@ export default function ProductPage({ params }) {
             onClick={() => setSelectedColor(c)}
             className={`px-3 py-2 rounded-xl ${
               selectedColor?.name === c.name
-                ? "bg-purple-200"
+                ? "bg-neutral-palePurpleClickable text-white"
                 : "bg-white/60"
             }`}
           >
@@ -123,18 +139,13 @@ export default function ProductPage({ params }) {
 
       {/* Quantity */}
       <div className="flex justify-center gap-4 mt-6">
-        <button
-          onClick={() => setQuantity(Math.max(1, quantity - 1))}
-        >
+        <button onClick={() => setQuantity(Math.max(1, quantity - 1))}>
           –
         </button>
         <span>{quantity}</span>
-        <button onClick={() => setQuantity(quantity + 1)}>
-          +
-        </button>
+        <button onClick={() => setQuantity(quantity + 1)}>+</button>
       </div>
 
-      {/* Add to Cart */}
       <button
         onClick={handleAddToCart}
         className="btn-cart mt-8 mx-auto block"
