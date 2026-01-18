@@ -1,6 +1,7 @@
 "use client";
 
 import { useModal } from "@/app/ClientShell";
+import Link from "next/link";
 
 export default function HelpAMamaPage() {
   const { openModal } = useModal();
@@ -12,19 +13,22 @@ export default function HelpAMamaPage() {
           HelloBumble Help-a-Mama
         </h1>
 
-        <p className="leading-relaxed">
+        <p className="leading-relaxed text-neutral-blackText">
           We are firm believers that God will provide and sometimes uses others
           to do so. If you are in need,{" "}
           <button
+            type="button"
             onClick={() => openModal("needhelp")}
             className="text-palePurpleClickable underline font-medium"
           >
             reach out
           </button>
           .
-          <br /><br />
+          <br />
+          <br />
           If you are able to give, please fill out{" "}
           <button
+            type="button"
             onClick={() => openModal("donate")}
             className="text-palePurpleClickable underline font-medium"
           >
@@ -32,6 +36,16 @@ export default function HelpAMamaPage() {
           </button>{" "}
           to donate your nappies to Help-a-Mama.
         </p>
+
+        {/* Terms link */}
+        <div className="mt-8">
+          <Link
+            href="/about/helpamama/hmtc"
+            className="underline text-sm text-neutral-palePurpleClickable"
+          >
+            View Help-a-Mama Terms & Conditions
+          </Link>
+        </div>
       </div>
     </div>
   );
