@@ -84,7 +84,6 @@ export default function ShippingPage() {
     setSubmitting(true);
 
     try {
-      // Get latest address for this user (safe update)
       const { data: existing } = await supabase
         .from("shipping_addresses")
         .select("id")
@@ -120,12 +119,10 @@ export default function ShippingPage() {
 
       const shippingCost = method === "courier" ? 150 : 0;
 
-      // Persist to context
       setShippingAddressId(address.id);
       setShippingMethod(method);
       setShippingCost(shippingCost);
 
-      // Persist snapshot for checkout (authoritative)
       localStorage.setItem(
         "hellobumbleShipping",
         JSON.stringify({
@@ -148,7 +145,8 @@ export default function ShippingPage() {
     <div className="min-h-screen px-6 py-20 flex justify-center">
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 space-y-8">
 
-        <h1 className="text-3xl font-hellobumble text-center">
+        {/* ✅ Typography corrected */}
+        <h1 className="text-3xl tracking-wide text-center">
           Shipping Details
         </h1>
 
