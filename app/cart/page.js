@@ -18,7 +18,7 @@ export default function CartPage() {
     <div className="min-h-screen px-6 py-20 flex justify-center">
       <div className="w-full max-w-4xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10">
 
-        <h1 className="text-4xl font-hellobumble text-center mb-10">
+        <h1 className="text-4xl tracking-wide text-center mb-10">
           Your Cart
         </h1>
 
