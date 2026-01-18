@@ -13,7 +13,8 @@ export default function PayFastSuccessPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-6 py-20 text-center">
-      <h1 className="text-3xl font-hellobumble mb-4">
+      {/* ✅ Typography corrected */}
+      <h1 className="text-3xl tracking-wide mb-4">
         Thank you for your order 🐝
       </h1>
 
