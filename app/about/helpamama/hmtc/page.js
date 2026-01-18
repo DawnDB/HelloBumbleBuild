@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HMTCTerms() {
   return (
     <div className="min-h-screen px-6 py-20 flex flex-col items-center font-description">
@@ -24,9 +26,12 @@ export default function HMTCTerms() {
           inspection and receipt of the shipping cost statement.
         </p>
 
-        <a href="/helpamama" className="btn-primary mt-8 inline-block">
+        <Link
+          href="/about/helpamama"
+          className="btn-primary mt-8 inline-block"
+        >
           Back to Help-a-Mama
-        </a>
+        </Link>
       </div>
     </div>
   );
