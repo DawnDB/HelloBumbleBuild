@@ -6,9 +6,11 @@ import {
   adminOrderEmail,
 } from "@/app/lib/emailTemplates";
 
+export const runtime = "nodejs";
+
 // 🔐 Server-side Supabase (service role)
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
@@ -20,11 +22,10 @@ export async function POST(req) {
       shippingAddressId,
       cart,
       shippingCost,
-      paymentMethod, // "eft" | "payfast"
-      email, // optional (if you add it later)
+      paymentMethod,
+      email,
     } = body;
 
-    // 🛑 Basic validation
     if (
       !userId ||
       !shippingAddressId ||
@@ -37,7 +38,6 @@ export async function POST(req) {
       );
     }
 
-    // 🛑 Validate shipping cost
     const allowedShippingCosts = [0, 150];
     if (!allowedShippingCosts.includes(shippingCost)) {
       return NextResponse.json(
@@ -46,20 +46,16 @@ export async function POST(req) {
       );
     }
 
-    // 💰 Calculate totals server-side
     const subtotal = cart.reduce(
       (sum, item) => sum + item.price * item.quantity,
       0
     );
-
     const total = subtotal + shippingCost;
 
-    // 🧾 Generate hardened order number
     const orderNumber = `HB-${Date.now()}-${Math.floor(
       Math.random() * 1000
     )}`;
 
-    // 🧱 1️⃣ Create order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .insert({
@@ -77,7 +73,6 @@ export async function POST(req) {
 
     if (orderError) throw orderError;
 
-    // 🧱 2️⃣ Create order items
     const items = cart.map((item) => ({
       order_id: order.id,
       product_slug: item.slug,
@@ -93,41 +88,23 @@ export async function POST(req) {
 
     if (itemsError) throw itemsError;
 
-    /* ================================
-       📩 SEND ORDER EMAILS
-       (non-blocking safety)
-    ================================= */
     try {
-      // Customer email
       await sendEmail({
-        to: email || process.env.EMAIL_USER, // fallback safe
+        to: email || process.env.EMAIL_USER,
         subject: `Your HelloBumble order ${orderNumber}`,
-        html: customerOrderEmail({
-          orderNumber,
-          paymentMethod,
-        }),
+        html: customerOrderEmail({ orderNumber, paymentMethod }),
       });
 
-      // Admin email (Dawn)
       await sendEmail({
         to: process.env.EMAIL_USER,
         subject: `New order received: ${orderNumber}`,
-        html: adminOrderEmail({
-          orderNumber,
-          total,
-          paymentMethod,
-        }),
+        html: adminOrderEmail({ orderNumber, total, paymentMethod }),
       });
     } catch (emailErr) {
       console.error("Order email failed:", emailErr);
-      // ❗ Do NOT fail the order if email fails
     }
 
-    // ✅ Success
-    return NextResponse.json({
-      orderId: order.id,
-      orderNumber,
-    });
+    return NextResponse.json({ orderId: order.id, orderNumber });
   } catch (err) {
     console.error("Order creation failed:", err);
     return NextResponse.json(
