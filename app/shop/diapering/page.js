@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { products } from "../products";
+import { useModal } from "@/app/components/modals/ModalContext";
 
 export default function DiaperingPage() {
+  const { openModal } = useModal();
+
   const diaperingProducts = products.filter(
     (p) => p.category === "diapering"
   );
@@ -34,8 +37,11 @@ export default function DiaperingPage() {
 
       {/* CUTE CUSTOM FABRIC MESSAGE */}
       <p className="mt-20 text-center font-description opacity-90">
-        Have a fabric you absolutely love? 💕  
-        <button className="underline text-palePurpleClickable ml-1">
+        Have a fabric you absolutely love? 💕
+        <button
+          onClick={() => openModal("contact")}
+          className="underline text-neutral-palePurpleClickable ml-1"
+        >
           Pop us a message
         </button>{" "}
         and we’ll happily create something just for you 🐝
