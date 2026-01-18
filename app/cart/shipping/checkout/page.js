@@ -79,7 +79,7 @@ export default function CheckoutPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         userId: user.id,
-        shippingAddressId: shipping.addressId, // ✅ FIXED
+        shippingAddressId: shipping.addressId,
         cart,
         shippingCost: shipping.cost,
         paymentMethod,
@@ -98,7 +98,7 @@ export default function CheckoutPage() {
       JSON.stringify(data)
     );
 
-    return data; // { orderId, orderNumber }
+    return data;
   }
 
   /* ================================
@@ -106,7 +106,8 @@ export default function CheckoutPage() {
   ================================= */
   return (
     <div className="max-w-6xl mx-auto px-6 py-20">
-      <h1 className="text-3xl font-hellobumble mb-10 text-center">
+      {/* ✅ Typography corrected */}
+      <h1 className="text-3xl tracking-wide mb-10 text-center">
         Checkout
       </h1>
 
