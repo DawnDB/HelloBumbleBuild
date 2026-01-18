@@ -1,5 +1,7 @@
 import nodemailer from "nodemailer";
 
+export const runtime = "nodejs";
+
 export async function POST(request) {
   try {
     const body = await request.json();
@@ -9,8 +11,8 @@ export async function POST(request) {
       contact,
       babyAge,
       babyWeight,
-      situation, // matches modalConfigs
-      company,   // 🐝 honeypot
+      situation,
+      company, // 🐝 honeypot
     } = body;
 
     /* 🐝 HONEYPOT CHECK (SILENT SUCCESS) */
@@ -41,7 +43,7 @@ export async function POST(request) {
     });
 
     /* 📬 EMAIL CONTENT */
-    const mailOptions = {
+    await transporter.sendMail({
       from: `"HelloBumble Help-a-Mama" <${process.env.SMTP_USER}>`,
       to: "dawn@hellobumble.co.za",
       subject: "Help-a-Mama Request",
@@ -58,9 +60,7 @@ export async function POST(request) {
           <p>${situation}</p>
         </div>
       `,
-    };
-
-    await transporter.sendMail(mailOptions);
+    });
 
     return new Response(
       JSON.stringify({ message: "Help-a-Mama email sent" }),
