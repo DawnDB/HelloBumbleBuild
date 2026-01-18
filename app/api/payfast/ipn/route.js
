@@ -1,15 +1,16 @@
 import { NextResponse } from "next/server";
 import { createClient } from "@supabase/supabase-js";
 
+export const runtime = "nodejs";
+
 // 🔐 Server-side Supabase (service role)
 const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL,
+  process.env.SUPABASE_URL,
   process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 export async function POST(req) {
   try {
-    // PayFast sends x-www-form-urlencoded
     const bodyText = await req.text();
     const params = new URLSearchParams(bodyText);
 
@@ -17,17 +18,17 @@ export async function POST(req) {
     const orderNumber = params.get("m_payment_id");
     const pfPaymentId = params.get("pf_payment_id");
 
-    // 🛑 Basic validation
     if (!orderNumber || !paymentStatus) {
-      return NextResponse.json({ error: "Invalid IPN payload" }, { status: 400 });
+      return NextResponse.json(
+        { error: "Invalid IPN payload" },
+        { status: 400 }
+      );
     }
 
-    // Only process completed payments
     if (paymentStatus !== "COMPLETE") {
       return NextResponse.json({ status: "ignored" }, { status: 200 });
     }
 
-    // 🔍 Fetch matching order
     const { data: order, error: orderError } = await supabase
       .from("orders")
       .select("id, status")
@@ -38,12 +39,13 @@ export async function POST(req) {
       return NextResponse.json({ error: "Order not found" }, { status: 404 });
     }
 
-    // 🛑 Prevent double-processing
     if (order.status === "paid") {
-      return NextResponse.json({ status: "already_paid" }, { status: 200 });
+      return NextResponse.json(
+        { status: "already_paid" },
+        { status: 200 }
+      );
     }
 
-    // ✅ Mark order as paid
     const { error: updateError } = await supabase
       .from("orders")
       .update({
