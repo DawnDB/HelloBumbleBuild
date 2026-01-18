@@ -3,11 +3,12 @@
 import { NextResponse } from "next/server";
 import nodemailer from "nodemailer";
 
+export const runtime = "nodejs";
+
 export async function POST(req) {
   try {
     const data = await req.formData();
 
-    // Only process successful payments
     if (data.get("payment_status") !== "COMPLETE") {
       return NextResponse.json({ ignored: true });
     }
@@ -22,20 +23,28 @@ export async function POST(req) {
       );
     }
 
-    const orderData = JSON.parse(orderDataRaw);
+    let orderData;
+    try {
+      orderData = JSON.parse(orderDataRaw);
+    } catch {
+      return NextResponse.json(
+        { error: "Invalid order payload" },
+        { status: 400 }
+      );
+    }
 
     const transporter = nodemailer.createTransport({
-      host: "smtpout.secureserver.net",
+      host: process.env.SMTP_HOST,
       port: 465,
       secure: true,
       auth: {
-        user: "dawn@hellobumble.co.za",
-        pass: process.env.EMAIL_PASS,
+        user: process.env.SMTP_USER,
+        pass: process.env.SMTP_PASS,
       },
     });
 
     await transporter.sendMail({
-      from: "HelloBumble <dawn@hellobumble.co.za>",
+      from: `"HelloBumble Orders" <${process.env.SMTP_USER}>`,
       to: "dawn@hellobumble.co.za",
       subject: `New Paid Order – ${orderNumber}`,
       text: `
@@ -55,9 +64,7 @@ ${orderData.shipping.postal}
 
 Products:
 ${orderData.cart
-  .map(
-    (i) => `${i.name} × ${i.quantity} – R${i.price * i.quantity}`
-  )
+  .map((i) => `${i.name} × ${i.quantity} – R${i.price * i.quantity}`)
   .join("\n")}
 
 Total Paid: R${orderData.total}
