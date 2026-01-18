@@ -2,8 +2,11 @@
 
 import Link from "next/link";
 import { products } from "../products";
+import { useModal } from "@/app/components/modals/ModalContext";
 
 export default function MomPage() {
+  const { openModal } = useModal();
+
   const momProducts = products.filter(
     (p) => p.category === "mom"
   );
@@ -21,7 +24,7 @@ export default function MomPage() {
             href={`/shop/${product.slug}`}
             className="bg-whiteOverlay backdrop-blur-sm rounded-2xl p-4 shadow-soft hover:scale-[1.02] transition block"
           >
-            <div className="h-28 bg-gray-200 rounded-xl flex items-center justify-center text-gray-500">
+            <div className="h-28 bg-gray-200 rounded-xl flex items-center justify-center text-gray-500 font-description">
               Image
             </div>
 
@@ -32,12 +35,16 @@ export default function MomPage() {
         ))}
       </div>
 
+      {/* STANDARD CUSTOM FABRIC MESSAGE */}
       <p className="mt-20 text-center font-description opacity-90">
-        Want your favourite fabric turned into something special? 🌸  
-        <button className="underline text-palePurpleClickable ml-1">
-          Message us
+        Have a fabric you absolutely love? 💕
+        <button
+          onClick={() => openModal("contact")}
+          className="underline text-neutral-palePurpleClickable ml-1"
+        >
+          Pop us a message
         </button>{" "}
-        and we’ll sort it together.
+        and we’ll happily create something just for you 🐝
       </p>
     </div>
   );
