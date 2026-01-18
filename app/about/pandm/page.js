@@ -1,11 +1,7 @@
-"use client";
-
 export default function ProductsAndMaterials() {
   return (
     <div className="min-h-screen flex flex-col items-center px-6 py-20 font-description">
-      {/* Main Content Box */}
       <div className="w-full max-w-3xl bg-neutral-whiteOverlay rounded-2xl shadow-soft p-10 text-center">
-        {/* Page Title */}
         <h1 className="text-5xl mb-10 tracking-wide">
           Products & Materials
         </h1>
@@ -53,7 +49,6 @@ export default function ProductsAndMaterials() {
           quality standards.
         </p>
 
-        {/* MATERIAL LIST */}
         <ul className="text-left mx-auto mb-10 leading-relaxed list-disc pl-6 max-w-md">
           <li>Cotton</li>
           <li>Hemp</li>
@@ -63,7 +58,6 @@ export default function ProductsAndMaterials() {
           <li>OEKO-TEX certified snaps</li>
         </ul>
 
-        {/* Closing Line */}
         <p className="tracking-wider text-lg opacity-95">
           Made with love. Made with intention. Made for your little Bumble.
         </p>
